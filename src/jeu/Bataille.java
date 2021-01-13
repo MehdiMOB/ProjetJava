@@ -11,6 +11,7 @@ public class Bataille implements Serializable {
 	protected Piece A;
 	protected Piece B;
 //TESTPUSHMEHDI
+//TEST2PUSHMEHDI
 // Constructeur
 	
 public Bataille(Piece A , Piece B) {
