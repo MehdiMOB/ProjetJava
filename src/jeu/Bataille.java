@@ -11,8 +11,6 @@ public class Bataille implements Serializable {
 	protected Piece A;
 	protected Piece B;
 
-// Constructeur
-	
 public Bataille(Piece A , Piece B) {
 	this.A=A;
 	this.B=B;
