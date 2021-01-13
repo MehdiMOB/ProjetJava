@@ -30,7 +30,8 @@ public class DeroulementJeu {
 		init();
 	}
 	
-	//TEST GIThub
+	
+	//test 2
 	private static void init() {
 		
 		int choix=0;
