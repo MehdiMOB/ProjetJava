@@ -10,7 +10,7 @@ import tresor.Armure;
 public class Bataille implements Serializable {
 	protected Piece A;
 	protected Piece B;
-
+//TESTPUSHMEHDI
 // Constructeur
 	
 public Bataille(Piece A , Piece B) {
