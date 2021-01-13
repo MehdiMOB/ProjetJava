@@ -6,7 +6,8 @@ import java.util.List;
 
 import protagonistes.Piece;
 
-
+//test
+// test2
 public class Equipe implements Serializable {
 	
 	private String nom ;
@@ -14,7 +15,7 @@ public class Equipe implements Serializable {
 	private int nbEffectif;
 	public Equipe(String nom) {
 		this.nom=nom;
-		//Effectif est initialisé à 0 au départ
+		//Effectif est initialisï¿½ ï¿½ 0 au dï¿½part
 		this.nbEffectif= 0;
 	}
 
