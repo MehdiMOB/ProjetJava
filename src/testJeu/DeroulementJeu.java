@@ -31,7 +31,6 @@ public class DeroulementJeu {
 	}
 	
 	
-	//test 2
 	private static void init() {
 		
 		int choix=0;
