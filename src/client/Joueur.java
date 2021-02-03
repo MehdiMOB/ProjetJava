@@ -16,7 +16,8 @@ import serveur.Echec;
  */
 
 public class Joueur {	
-
+	
+	
 	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException{
 		// Création d'un scanner sur l'interface du système afin de récupérer des informations saisies par l'utilisateur
 		Scanner scan = new Scanner(System.in);
@@ -26,7 +27,13 @@ public class Joueur {
 		// Demande de l'action à réaliser
 		System.out.println("Choisir une équipe");
 		System.out.println("1 : Homme");
-		System.out.println("2 : Dragon");		
+		System.out.println("2 : Dragon");
+		System.out.println("Bonjour, veuillez saisir votre nom");
+		
+		String nomJoueur = scan.nextLine();
+		
+		String equipe = jeu.demarrerPartie(nomJoueur);
+			
 		
 		try {
 			// Récupération des données utilisateur

@@ -17,6 +17,24 @@ import testJeu.DeroulementJeu;
 
 public class EchecImpl extends UnicastRemoteObject implements Echec {
 
+
+	String dragon; 
+	String homme; 
+	
+	@Override
+	public String demarrerPartie(String nomJoueur) throws RemoteException {
+		// TODO Auto-generated method stub
+		// il faut que le joueur appartienne à une équipe : noire ou blanc
+		if (dragon == null) {
+			dragon = nomJoueur;
+			return "dragon";
+		}else {
+			homme = nomJoueur; 
+			return"homme";
+		}
+		
+	}
+
 	// Classe qui contient l'ensmble des méthodes et eds règles du jeu
 	private Jeu jeu;
 	

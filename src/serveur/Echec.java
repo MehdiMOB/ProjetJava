@@ -36,5 +36,11 @@ public interface Echec extends Remote {
 	 * @throws RemoteException
 	 */
 	void restaurerPartie() throws RemoteException;	
+	
+	/**
+	 * Methode qui permet au joueur de démarrer une partie et retourne l'équipe qui lui a été affectée
+	 * @throws RemoteException
+	 */
+	String demarrerPartie(String nomJoueur) throws RemoteException;	
 
 }
