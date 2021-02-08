@@ -1,6 +1,7 @@
 package jeu;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,14 @@ public class Equipe implements Serializable {
 		return chaine;
 	}
 
+	/**
+	 * Methode qui permet de représenter l'état de l'équipe sous forme de chaine de caractères
+	 * 
+	 * @return chaine de caractères
+	 */	
+	public String toString() {
+		return "";
+	}
 	
 		
 }

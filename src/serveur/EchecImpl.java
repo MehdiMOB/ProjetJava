@@ -5,7 +5,6 @@ import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 
-import jeu.Jeu;
 import testJeu.DeroulementJeu;
 
 /**
@@ -35,31 +34,23 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		
 	}
 
-	// Classe qui contient l'ensmble des méthodes et eds règles du jeu
-	private Jeu jeu;
-	
+
 	/**
 	 * Instancie un nouveau jeu
 	 * @throws RemoteException
 	 */
 	protected EchecImpl() throws RemoteException {
-		super();
-		jeu = new Jeu();
 	}
 		
 	/**
-	 * Methode qui permet la création de l'équipe en fonction du camp choisi
-	 * @param camp
-	 * @return confirmation textuelle que l'équipe a été créée
+	 * Methode qui permet la création de l'équipe 
+	 * @param ensemble des pièces de l'équipe sous forme de chaine de caractères
+	 * @return 0 si tout s'est bien passé, 1 sinon
 	 * @throws RemoteException
 	 */	
-	public String creationEquipe(int camp) throws RemoteException {
+	public int creationEquipe(String equipe) throws RemoteException {
 		// TODO Auto-generated method stub
-		if (camp == 1) {
-			return jeu.creationEquipeHomme();
-		}else {
-			return jeu.creationEquipeDragon();
-		}
+		return 0;
 	}
 
 	@Override

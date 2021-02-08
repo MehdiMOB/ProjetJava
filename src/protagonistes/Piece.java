@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 
 import creation.NombreAleatoire;
-import jeu.Equipe;
+import client.Equipe;
 import protagonistes.Homme;
 import protagonistes.Dragon;
 import protagonistes.Reine;
@@ -50,7 +50,7 @@ public class Piece implements Serializable {
 	}
 	public void rejoindreEquipe(Equipe equipe) {
 		
-		this.equipe =equipe;
+		this.equipe = equipe;
 	}
 	
 	public Equipe getEquipe() {

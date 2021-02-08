@@ -6,40 +6,44 @@ import jeu.Equipe;
 import protagonistes.*;
 
 public class CreerProtagoniste implements Serializable {
+
 	private Equipe hommes ;
-	private Equipe dragons ;
+	private Equipe dragons ;	
 	
-	public CreerProtagoniste(Equipe hommes , Equipe dragons) {
-		this.hommes=hommes;
-		this.dragons=dragons;
-	}
-	
-	public void creerProtagoniste() {
-		System.out.println("Création de l'équipe Homme : \n");
-		int i = 1 ;
-		while (i<5 && i > 0)
-		{	
-			System.out.println("choisir le type d'homme que vous voulez créer :\n1-Roi\n2-Heros\n3-Reine\n4-Homme\nAutre-OK");
-			i = Clavier.entrerClavierInt();
-			switch (i) {
-				case 1 : creerRoi(); break;
-				case 2 : creerHeros(); break;
-				case 3 : creerReine();break;
-				case 4 : creerHomme(); break;
-				default : break;
-			}
-		}
+	public String creerProtagoniste(String camp) {
 		
-		
-		System.out.println("Création de l'équipe Dragon : \n");
-		i = 1;
-		while (i==1)
-		{	System.out.println("1-Ajouter un dragon\nAutre-OK");
-			i = Clavier.entrerClavierInt();
-			if (i==1 ) {
-				creerDragon();
-			}
+		if (camp== "homme") {
 			
+			System.out.println("Création de l'équipe Homme : \n");
+			int i = 1 ;
+			while (i<5 && i > 0)
+			{	
+				System.out.println("choisir le type d'homme que vous voulez créer :\n1-Roi\n2-Heros\n3-Reine\n4-Homme\nAutre-OK");
+				i = Clavier.entrerClavierInt();
+				switch (i) {
+					case 1 : creerRoi(); break;
+					case 2 : creerHeros(); break;
+					case 3 : creerReine();break;
+					case 4 : creerHomme(); break;
+					default : break;
+				}
+			}
+			return hommes.toString();
+		}else if ( camp== "dragon") {
+			System.out.println("Création de l'équipe Dragon : \n");
+			int i = 1;
+			while (i==1)
+			{	System.out.println("1-Ajouter un dragon\nAutre-OK");
+				i = Clavier.entrerClavierInt();
+				if (i==1 ) {
+					creerDragon();
+				}
+				
+			}			
+			return dragons.toString();
+			
+		} else {			
+			return "Valeur inconnue !";
 		}
 		
 	}

@@ -11,13 +11,14 @@ import java.rmi.RemoteException;
  */
 
 public interface Echec extends Remote {
+	
 	/**
-	 * Methode qui permet la création de l'équipe en fonction du camp choisi
-	 * @param camp
-	 * @return confirmation textuelle que l'équipe a été créée
+	 * Methode qui permet la création de l'équipe 
+	 * @param ensemble des pièces de l'équipe sous forme de chaine de caractères
+	 * @return 0 si tout s'est bien passé, 1 sinon
 	 * @throws RemoteException
 	 */	
-	String creationEquipe(int camp) throws RemoteException;
+	public int creationEquipe(String equipe) throws RemoteException;
 	
 	/**
 	 * Methode qui permet au joueur de déplacer un pion
@@ -39,6 +40,8 @@ public interface Echec extends Remote {
 	
 	/**
 	 * Methode qui permet au joueur de démarrer une partie et retourne l'équipe qui lui a été affectée
+	 * @param nom du joueur
+	 * @return camp qui lui est affecté
 	 * @throws RemoteException
 	 */
 	String demarrerPartie(String nomJoueur) throws RemoteException;	
