@@ -35,12 +35,11 @@ public class DeplacerJoueur implements Serializable {
 		//bloc try catch 
 		Piece gagnant = plateau.occuperCase(piece, x - 1, y - 1);
 		plateau.libererCase(cord_x-1, cord_y-1);
-		if (gagnant == piece)
-		{
-		interfaceplateau.eliminer_Piece(piece, cord_x,cord_y );
-		interfaceplateau.ajout_Piece(piece, x, y);
-		}
-		else {
+		
+		if (gagnant == piece) {
+			interfaceplateau.eliminer_Piece(piece, cord_x,cord_y );
+			interfaceplateau.ajout_Piece(piece, x, y);
+		}else {
 			interfaceplateau.eliminer_Piece(piece, cord_x, cord_y);
 		}
 	}

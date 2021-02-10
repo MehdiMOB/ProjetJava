@@ -1,7 +1,12 @@
-package serveur;
+package commun;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+
+import jeu.Equipe;
+import protagonistes.Piece;
+import tresor.Arme;
+import tresor.Armure;
 
 /**
  * interface de jeu de plateau type échecs multijoueurs
@@ -14,17 +19,17 @@ public interface Echec extends Remote {
 	
 	/**
 	 * Methode qui permet la création de l'équipe 
-	 * @param ensemble des pièces de l'équipe sous forme de chaine de caractères
+	 * @param nom du joueur qui communiqie son équipe, ensemble des pièces de l'équipe sous forme de chaine de caractères
 	 * @return 0 si tout s'est bien passé, 1 sinon
 	 * @throws RemoteException
-	 */	
-	public int creationEquipe(String equipe) throws RemoteException;
+	 */
+	public int creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException;
 	
 	/**
-	 * Methode qui permet au joueur de déplacer un pion
+	 * 
 	 * @throws RemoteException
 	 */	
-	void jouerTour() throws RemoteException;
+	public String bataille(Piece A , Piece B, Arme arme, Armure armure) throws RemoteException;
 	
 	/**
 	 * Methode qui permet au joueur de sauvegarder une partie en cours sur le serveur
@@ -44,6 +49,6 @@ public interface Echec extends Remote {
 	 * @return camp qui lui est affecté
 	 * @throws RemoteException
 	 */
-	String demarrerPartie(String nomJoueur) throws RemoteException;	
+	String demarrerPartie(String nomJoueur, Client_joueur joueur) throws RemoteException;	
 
 }

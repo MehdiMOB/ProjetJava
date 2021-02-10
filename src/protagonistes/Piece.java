@@ -48,9 +48,9 @@ public class Piece implements Serializable {
 		}
 		
 	}
-	public void rejoindreEquipe(Equipe equipe) {
+	public void rejoindreEquipe(jeu.Equipe equipe2) {
 		
-		this.equipe = equipe;
+		this.equipe = equipe2;
 	}
 	
 	public Equipe getEquipe() {

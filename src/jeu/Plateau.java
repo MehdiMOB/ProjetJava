@@ -8,7 +8,12 @@ import tresor.StockArmes;
 import tresor.StockArmures;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
+import commun.Echec;
 import protagonistes.Homme;
 
 
@@ -21,9 +26,11 @@ public class Plateau implements Serializable {
 	private Equipe equipeDragons;
 	private Arme arme;
 	private Armure armure;
+	Echec serveur;
 	
 	
-	public Plateau(Equipe equipeHommes,Equipe equipeDragons, Arme arme, Armure armure) {
+	public Plateau(Equipe equipeHommes,Equipe equipeDragons, Arme arme, Armure armure) throws MalformedURLException, RemoteException, NotBoundException {
+		this.serveur = (Echec) Naming.lookup("rmi://localhost/Echec");
 		this.equipeDragons= equipeDragons;
 		this.equipeHommes=equipeHommes;
 		this.arme=arme;
@@ -45,6 +52,11 @@ public class Plateau implements Serializable {
 
 	}
 	
+	/*
+	 * Methode qui vérifie si la case de destination est vide, occupée apr un allié ou un adversaire
+	 * Dans ce dernier cas elle déclenckhe un combat
+	 */
+	
 	public Piece occuperCase(Piece occupant, int x , int y) {
 //		int x = occupant.getCoordonnee_x();
 //		int y = occupant.getCoordonnee_y();
@@ -54,10 +66,13 @@ public class Plateau implements Serializable {
 		} else {
 			System.out.println("La case est déjà occupée par " + lesCases[x][y].contenir().getType());
 			if (occupant.getEquipe() != lesCases[x][y].contenir().getEquipe()) {
-				System.out.println("FIGHT !!");
-				bataille = new Bataille(occupant,lesCases[x][y].contenir());
-				int resultat = bataille.derouler(occupant, lesCases[x][y].contenir(), arme, armure);
-				if (resultat == 1 ) {
+				System.out.println("FIGHT !!");			
+				
+				String resultatbataille = serveur.bataille(occupant,lesCases[x][y].contenir(), null, null);
+				
+				String resultat = resultatbataille.substring(resultatbataille.length()-1);
+				
+				if (resultat == "1" ) {
 					lesCases[x][y].contenir().getEquipe().supprimerPiece(lesCases[x][y].contenir());
 					lesCases[x][y].setOccupant(occupant);
 				}

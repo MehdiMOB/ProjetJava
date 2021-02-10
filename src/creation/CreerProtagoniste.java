@@ -10,7 +10,7 @@ public class CreerProtagoniste implements Serializable {
 	private Equipe hommes ;
 	private Equipe dragons ;	
 	
-	public String creerProtagoniste(String camp) {
+	public Equipe creerProtagoniste(String camp) {
 		
 		if (camp== "homme") {
 			
@@ -28,8 +28,10 @@ public class CreerProtagoniste implements Serializable {
 					default : break;
 				}
 			}
-			return hommes.toString();
+			return hommes;
+			
 		}else if ( camp== "dragon") {
+			
 			System.out.println("Création de l'équipe Dragon : \n");
 			int i = 1;
 			while (i==1)
@@ -40,10 +42,10 @@ public class CreerProtagoniste implements Serializable {
 				}
 				
 			}			
-			return dragons.toString();
+			return dragons;
 			
 		} else {			
-			return "Valeur inconnue !";
+			return null;
 		}
 		
 	}
