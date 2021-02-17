@@ -68,7 +68,7 @@ public class Plateau implements Serializable {
 			if (occupant.getEquipe() != lesCases[x][y].contenir().getEquipe()) {
 				System.out.println("FIGHT !!");			
 				
-				String resultatbataille;
+				String resultatbataille = null;
 				try {
 					resultatbataille = serveur.bataille(occupant,lesCases[x][y].contenir(), null, null);
 				} catch (RemoteException e) {

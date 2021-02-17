@@ -3,6 +3,8 @@ package client;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import com.sun.swing.internal.plaf.synth.resources.synth;
+
 import commun.ClientJoueur;
 import jeu.Equipe;
 
@@ -16,6 +18,7 @@ import jeu.Equipe;
 public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueur {
 
 	Equipe equipeAdverse;
+	boolean adversairePresent = false;
 
 	protected ClientJoueurImpl() throws RemoteException {
 		super();
@@ -61,6 +64,8 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 	
 	public int arriveeAdversaire() throws RemoteException {
 		// TODO Auto-generated method stub
+		adversairePresent = true;
+		
 		synchronized(this) {
 			try {
 				this.notify();
@@ -81,5 +86,26 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 		return equipeAdverse;
 	}
 	
+	public synchronized void attendreAdversaire() {
+		while (!adversairePresent){
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public synchronized void attendreEquipeAdverse() {
+		while (equipeAdverse == null){
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 
 }

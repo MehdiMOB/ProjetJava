@@ -6,6 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+import commun.ClientJoueur;
 import commun.Echec;
 import creation.Clavier;
 import creation.CreerProtagoniste;
@@ -65,15 +66,7 @@ public class Joueur {
 		
 		// Si premier, mise en attente de la connexion de l'adversaire
 		if (camp.equals("dragon")) {
-			synchronized(clientjoueur) {
-				try {
-					System.out.println("en attente connexion adversaire");
-					clientjoueur.wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			clientjoueur.attendreAdversaire();
 		}
 		
 		
@@ -87,16 +80,8 @@ public class Joueur {
 		}
 		
 		// Mise en attente de réception de l'équipe adverse
-		synchronized(clientjoueur) {
-			try {
-				System.out.println("en attente équipe ");
-				clientjoueur.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
+		clientjoueur.attendreEquipeAdverse();
+			
 
 		equipeAdversaire = clientjoueur.getEquipeAdverse();
 		

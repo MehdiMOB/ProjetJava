@@ -39,16 +39,18 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	
 	@Override
 	public String demarrerPartie(String nomJoueur, ClientJoueur joueur) throws RemoteException {
-		// TODO Auto-generated method stub
-		// il faut que le joueur appartienne à une équipe : noire ou blanc
+		
+		// Le premier joueur a l'équipe dragon et se met en attente de l'adversaire
 		if (dragon == null) {
 			dragon = nomJoueur;
 			joueurDragon = joueur;
+			
 			return "dragon";
 		}else {
+		// Le deuxième joueur a l'équipe des hommes et informe le premier joueur qu'il a un nouvel adversaire	
 			homme = nomJoueur;
 			joueurHomme = joueur;
-			joueurDragon.arriveeAdversaire();
+			joueurDragon.arriveeAdversaire();			
 			return"homme";
 		}
 		
@@ -66,10 +68,8 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		
 		if (dragon.equals(nomJoueur)){
 			return joueurHomme.equipeAdverse(equipe);
-		}else if (homme.equals(nomJoueur)){
+		}else{
 			return joueurDragon.equipeAdverse(equipe);
-		}else {
-			return 1;
 		}
 	}
 	
@@ -81,6 +81,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	 * @throws RemoteException
 	 */
 	public String bataille(Piece A , Piece B, Arme arme, Armure armure) {
+		
 		
 		Random r = new Random();
 		while (!A.estMort()&& !B.estMort()) {
