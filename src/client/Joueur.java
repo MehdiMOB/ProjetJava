@@ -4,7 +4,6 @@ import java.rmi.Naming;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import commun.Echec;
@@ -35,7 +34,7 @@ public class Joueur {
 		 Equipe equipeAdversaire = null;
 		 ClientJoueurImpl clientjoueur = new ClientJoueurImpl(); 
 		 
-		// Variables d'échange d'information entre le serveur et le client
+		// Variables d'échange d'informations entre le serveur et le client
 		String camp = null;
 		String nomJoueur;
 		Plateau plateau;
@@ -55,7 +54,7 @@ public class Joueur {
 		
 		camp = serveur.demarrerPartie(nomJoueur, clientjoueur); 
 		
-		
+		// Lancement du script de création d'équipe et récupération de l'équipe créée
 		if (camp == "homme" || camp == "dragon"){
 			equipeJoueur = creation.creerProtagoniste(camp);
 		}else {
@@ -143,7 +142,7 @@ public class Joueur {
 				}
 				if (option == 2)
 				{	
-					sauvgarder(setup);
+					// sauvegarder(setup);
 					System.out.print("la sauvegarde est terminé, vous allez quitté le jeu ");
 					break;
 					

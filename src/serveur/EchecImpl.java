@@ -6,7 +6,7 @@ import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
 
-import commun.Client_joueur;
+import commun.ClientJoueur;
 import commun.Echec;
 import jeu.Equipe;
 import protagonistes.Piece;
@@ -25,12 +25,20 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 
 
 	String dragon;
-	Client_joueur joueurDragon;
+	ClientJoueur joueurDragon;
 	String homme;
-	Client_joueur joueurHomme;
+	ClientJoueur joueurHomme;
+	
+	/**
+	 * Instancie un nouveau jeu
+	 * @throws RemoteException
+	 */
+	protected EchecImpl() throws RemoteException {
+	}
+		
 	
 	@Override
-	public String demarrerPartie(String nomJoueur, Client_joueur joueur) throws RemoteException {
+	public String demarrerPartie(String nomJoueur, ClientJoueur joueur) throws RemoteException {
 		// TODO Auto-generated method stub
 		// il faut que le joueur appartienne à une équipe : noire ou blanc
 		if (dragon == null) {
@@ -45,14 +53,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		
 	}
 
-
-	/**
-	 * Instancie un nouveau jeu
-	 * @throws RemoteException
-	 */
-	protected EchecImpl() throws RemoteException {
-	}
-		
+	
 	/**
 	 * Methode qui permet la création de l'équipe 
 	 * @param nom du joueur qui communiqie son équipe, ensemble des pièces de l'équipe sous forme de chaine de caractères
@@ -71,26 +72,12 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	}
 	
 	
-
-	@Override
-	public void jouerTour() throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void sauvegarderPartie() throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void restaurerPartie() throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-	
-	@Override
+	/**
+	 * Permet de lancer un combat entre 2 pièce de jeu
+	 * 
+	 * @return déroulé de la bataille et pièce gagnate sous la forme d'une chaine de caractères
+	 * @throws RemoteException
+	 */
 	public String bataille(Piece A , Piece B, Arme arme, Armure armure) {
 		
 		Random r = new Random();
@@ -123,5 +110,20 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		}
 	
 	}
+
+
+	@Override
+	public void sauvegarderPartie() throws RemoteException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void restaurerPartie() throws RemoteException {
+		// TODO Auto-generated method stub
+
+	}
+	
+
 
 }

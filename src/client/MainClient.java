@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 /**
- * Classe qui crée un serveur Client et le met à disposition du jeu via RMI
+ * Classe qui crée un serveur Client pour mettre à disposition du jeu des services via RMI
  *  
  * @author ACHIBANE, GENET, KHERFELLAH, PONS
  *
@@ -20,10 +20,13 @@ public class MainClient {
 	}
 
 	public static void main(String[] args) throws RemoteException, MalformedURLException, AlreadyBoundException {
+		
 		// Réservation d'un port pour mettre a disposition l'objet clientjoueur
 		LocateRegistry.createRegistry(1100);
+		
 		// Instanciation de l'objet clientjoueur possédant les méthodes à partager
 		ClientJoueurImpl joueur = new ClientJoueurImpl();
+		
 		// Liaison de l'objet jeu au port réservé
 		Naming.bind("joueur", joueur);
 	}

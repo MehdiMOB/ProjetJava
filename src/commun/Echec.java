@@ -16,7 +16,15 @@ import tresor.Armure;
  */
 
 public interface Echec extends Remote {
-	
+
+	/**
+	 * Methode qui permet au joueur de démarrer une partie et retourne l'équipe qui lui a été affectée
+	 * @param nom du joueur
+	 * @return camp qui lui est affecté
+	 * @throws RemoteException
+	 */
+	String demarrerPartie(String nomJoueur, ClientJoueur joueur) throws RemoteException;	
+
 	/**
 	 * Methode qui permet la création de l'équipe 
 	 * @param nom du joueur qui communiqie son équipe, ensemble des pièces de l'équipe sous forme de chaine de caractères
@@ -24,9 +32,12 @@ public interface Echec extends Remote {
 	 * @throws RemoteException
 	 */
 	public int creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException;
+
 	
 	/**
+	 * Permet de lancer un combat entre 2 pièce de jeu
 	 * 
+	 * @return déroulé de la bataille et pièce gagnate sous la forme d'une chaine de caractères
 	 * @throws RemoteException
 	 */	
 	public String bataille(Piece A , Piece B, Arme arme, Armure armure) throws RemoteException;
@@ -43,12 +54,5 @@ public interface Echec extends Remote {
 	 */
 	void restaurerPartie() throws RemoteException;	
 	
-	/**
-	 * Methode qui permet au joueur de démarrer une partie et retourne l'équipe qui lui a été affectée
-	 * @param nom du joueur
-	 * @return camp qui lui est affecté
-	 * @throws RemoteException
-	 */
-	String demarrerPartie(String nomJoueur, Client_joueur joueur) throws RemoteException;	
 
 }
