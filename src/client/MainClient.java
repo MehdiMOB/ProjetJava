@@ -1,4 +1,4 @@
-package client;
+ package client;
 
 import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
@@ -22,7 +22,7 @@ public class MainClient {
 	public static void main(String[] args) throws RemoteException, MalformedURLException, AlreadyBoundException {
 		
 		// Réservation d'un port pour mettre a disposition l'objet clientjoueur
-		LocateRegistry.createRegistry(1100);
+		LocateRegistry.createRegistry(1098);
 		
 		// Instanciation de l'objet clientjoueur possédant les méthodes à partager
 		ClientJoueurImpl joueur = new ClientJoueurImpl();

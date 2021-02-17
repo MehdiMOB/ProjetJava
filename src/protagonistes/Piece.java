@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 
 import creation.NombreAleatoire;
-import client.Equipe;
+import jeu.Equipe;
 import protagonistes.Homme;
 import protagonistes.Dragon;
 import protagonistes.Reine;

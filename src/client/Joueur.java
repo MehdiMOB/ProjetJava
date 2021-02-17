@@ -49,39 +49,61 @@ public class Joueur {
 
 		
 		// Récupération du camp 
-		System.out.println("Bonjour, veuillez saisir votre nom");
+		System.out.println("Bonjour, veuillez saisir votre nom \n");
 		nomJoueur = scan.nextLine();
 		
 		camp = serveur.demarrerPartie(nomJoueur, clientjoueur); 
 		
+		
+				
 		// Lancement du script de création d'équipe et récupération de l'équipe créée
-		if (camp == "homme" || camp == "dragon"){
+		if (camp.equals("homme") || camp.equals("dragon")){
 			equipeJoueur = creation.creerProtagoniste(camp);
 		}else {
 			System.err.println("Valeur de retour inattendue !");
 		}
 		
-		// Envoie de l'équipe créée au serveur
+		// Si premier, mise en attente de la connexion de l'adversaire
+		if (camp.equals("dragon")) {
+			synchronized(clientjoueur) {
+				try {
+					System.out.println("en attente connexion adversaire");
+					clientjoueur.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+		// Envoie de l'équipe créée au serveur quand adversaire connecté		
 		int success = serveur.creationEquipe(nomJoueur, equipeJoueur);
+		
+		Boolean test = success != 0;
 		
 		if (success != 0) {
 			System.err.println("Valeur de retour inattendue !");
 		}
 		
 		// Mise en attente de réception de l'équipe adverse
-		try {
-			clientjoueur.wait();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		synchronized(clientjoueur) {
+			try {
+				System.out.println("en attente équipe ");
+				clientjoueur.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
 
 		equipeAdversaire = clientjoueur.getEquipeAdverse();
 		
 		// Affichage du plateau
 		interfaceplateau = new InterfacePlateau();
 		
-		if (camp == "homme") {
+		if (camp.equals("homme")) {
 			plateau = new Plateau(equipeJoueur, equipeAdversaire, null, null);
 			setup = new Setup(interfaceplateau,plateau,equipeJoueur, equipeAdversaire);
 		} else {
@@ -101,7 +123,7 @@ public class Joueur {
 			int choix=0;
 			int option=0;
 			while (true) {
-			if (setup.hommes.getNbEffectif()== 0 )
+			if (setup.hommes.getNbEffectif() == 0 )
 			{
 				
 				System.out.println("Les dragons ont gagné !");

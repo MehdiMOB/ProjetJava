@@ -48,6 +48,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		}else {
 			homme = nomJoueur;
 			joueurHomme = joueur;
+			joueurDragon.arriveeAdversaire();
 			return"homme";
 		}
 		
@@ -62,9 +63,10 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	 */	
 	public int creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException {
 		// TODO Auto-generated method stub
-		if (dragon == nomJoueur){
+		
+		if (dragon.equals(nomJoueur)){
 			return joueurHomme.equipeAdverse(equipe);
-		}else if (homme == nomJoueur) {
+		}else if (homme.equals(nomJoueur)){
 			return joueurDragon.equipeAdverse(equipe);
 		}else {
 			return 1;

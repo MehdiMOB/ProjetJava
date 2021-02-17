@@ -46,16 +46,33 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 	public int equipeAdverse(Equipe equipe_adverse) throws RemoteException {
 		// TODO Auto-generated method stub
 		equipeAdverse = equipe_adverse;
-		try {
-			this.notify();
-			return 0;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		synchronized(this) {
+			try {
+				this.notify();
+				return 0;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
 		return 1;
 	}
 	
+	public int arriveeAdversaire() throws RemoteException {
+		// TODO Auto-generated method stub
+		synchronized(this) {
+			try {
+				this.notify();
+				return 0;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return 1;
+	}
 	/**
 	 * Permet d'accéer à l'équipe adverse mis à jour par le serveur
 	 * @return Equipe représentant l'équipe adverse
@@ -63,5 +80,6 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 	public Equipe getEquipeAdverse() {
 		return equipeAdverse;
 	}
+	
 
 }

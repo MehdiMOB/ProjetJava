@@ -30,4 +30,6 @@ public interface ClientJoueur extends Remote {
 	 * @throws RemoteException
 	 */
 	public int equipeAdverse(Equipe equipe_adverse) throws RemoteException;
+	
+	public int arriveeAdversaire() throws RemoteException;
 }
