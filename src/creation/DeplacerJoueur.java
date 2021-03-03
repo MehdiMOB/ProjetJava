@@ -24,12 +24,11 @@ public class DeplacerJoueur implements Serializable {
 		int cord_x=1+plateau.getCoordonneeX(piece);
 		int cord_y= 1+plateau.getCoordonneeY(piece);
 		do {
-		System.out.println("Veuillez choisir le numero de déplacement suivant LIGNE");
-		x = Clavier.entrerClavierInt();
-		System.out.println("Veuillez choisir le numero de déplacement suivant COLONNE");
-		y = Clavier.entrerClavierInt();
-		} 
-		while ((x > 8) || (y > 8));
+			System.out.println("Veuillez choisir le numero de déplacement suivant LIGNE");
+			x = Clavier.entrerClavierInt();
+			System.out.println("Veuillez choisir le numero de déplacement suivant COLONNE");
+			y = Clavier.entrerClavierInt();
+		} while ((x > 8) || (y > 8));
 		
 		
 		//bloc try catch 

@@ -5,6 +5,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 /**
  * Classe qui crée un jeu et le met à disposition via RMI
@@ -19,12 +20,22 @@ public class MainServeur {
 	}
 
 	public static void main(String[] args) throws RemoteException, MalformedURLException, AlreadyBoundException {
-		// Réservation d'un port pour mettre a disposition l'objet jeu 
-		LocateRegistry.createRegistry(1099);
+		Registry registry = null;
+		// Réservation d'un port pour mettre a disposition l'objet jeu
+		try {
+			registry = LocateRegistry.getRegistry(1099);
+			registry.list();
+		} catch (RemoteException e) {
+			registry = LocateRegistry.createRegistry(1099);
+		}
 		// Instanciation de l'objet jeu possédant les méthodes à partager
 		EchecImpl echec = new EchecImpl();
 		// Liaison de l'objet jeu au port réservé
-		Naming.bind("Echec", echec);		
+		try {
+			Naming.bind("Echec", echec);
+		} catch (AlreadyBoundException e) {
+			Naming.rebind("Echec", echec);
+		}	
 
 	}
 
