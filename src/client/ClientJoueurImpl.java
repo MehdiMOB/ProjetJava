@@ -7,6 +7,7 @@ import com.sun.swing.internal.plaf.synth.resources.synth;
 
 import commun.ClientJoueur;
 import jeu.Equipe;
+import protagonistes.Piece;
 
 /**
  * Jeu de plateau type échecs multijoueurs
@@ -19,6 +20,8 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 
 	Equipe equipeAdverse;
 	boolean adversairePresent = false;
+	String deplacementJoueur;
+	Piece piece = null;
 
 	protected ClientJoueurImpl() throws RemoteException {
 		super();
@@ -62,31 +65,40 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 		return 1;
 	}
 	
-	public int arriveeAdversaire() throws RemoteException {
+	/**
+	 * Permet de réveiller le joueur lors de l'arrivée d'un adversaire
+	 * 
+	 * @return 0 si tout s'est bien passé, 1 sinon
+	 * @throws RemoteException
+	 */
+	public void arriveeAdversaire() throws RemoteException {
 		// TODO Auto-generated method stub
 		adversairePresent = true;
 		
 		synchronized(this) {
 			try {
 				this.notify();
-				return 0;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
-		return 1;
 	}
+	
 	/**
-	 * Permet d'accéer à l'équipe adverse mis à jour par le serveur
+	 * Permet d'accéder à l'équipe adverse mise à jour par le serveur
 	 * @return Equipe représentant l'équipe adverse
 	 */
 	public Equipe getEquipeAdverse() {
 		return equipeAdverse;
 	}
 	
-	public synchronized void attendreAdversaire() {
+	/**
+	 * Permet de se mettre en attente d'une action de la part du joueur 
+	 * 
+	 * @throws RemoteException
+	 */	
+	public synchronized void attendreAdversaire() throws RemoteException{
 		while (!adversairePresent){
 			try {
 				this.wait();
@@ -97,6 +109,20 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 		}
 	}
 	
+	/**
+	 * Permet de se mettre en attente d'une action de la part du joueur 
+	 * 
+	 * @throws RemoteException
+	 */	
+	public synchronized void attendreTour() throws RemoteException{
+		try {
+			this.wait();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}	
+	
 	public synchronized void attendreEquipeAdverse() {
 		while (equipeAdverse == null){
 			try {
@@ -106,6 +132,35 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * Permet de récupérer la piece adverse à déplacer
+	 * 
+	 * @throws RemoteException
+	 */	
+	public Piece getPiece() throws RemoteException{		
+		return piece;
+	}
+	
+	/**
+	 * Permet de récupérer le déplacement adverse
+	 * 
+	 * @throws RemoteException
+	 */	
+	public String getDeplacement() throws RemoteException{
+		
+		return deplacementJoueur;
+	}
+	
+	/**
+	 * Permet de stoker le déplacement du joueur
+	 * 
+	 * @throws RemoteException
+	 */	
+	public void setDeplacement(Piece piece, String deplacement) throws RemoteException{
+		this.piece = piece;
+		this.deplacementJoueur = deplacement;
 	}
 
 }

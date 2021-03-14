@@ -1,6 +1,5 @@
 package jeu;
 
-
 import protagonistes.Piece;
 import tresor.Arme;
 import tresor.Armure;
@@ -54,21 +53,33 @@ public class Plateau implements Serializable {
 	
 	/*
 	 * Methode qui vérifie si la case de destination est vide, occupée apr un allié ou un adversaire
-	 * Dans ce dernier cas elle déclenckhe un combat
+	 * Dans ce dernier cas elle déclenche un combat
 	 */
 	
-	public Piece occuperCase(Piece occupant, int x , int y) {
-//		int x = occupant.getCoordonnee_x();
-//		int y = occupant.getCoordonnee_y();
+	public Piece occuperCase(String nomJoueur, Piece occupant, int x , int y) {
+
 		if (lesCases[x][y].isVide()) {
+			
 			lesCases[x][y].setOccupant(occupant);
+			// Envoi du déplacement au joueur adverse
+			if (nomJoueur != "") {
+					try {
+						this.serveur.deplacerPiece(nomJoueur, occupant, x, y);						
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
+			
 			return occupant;
+			
 		} else {
+			
 			System.out.println("La case est déjà occupée par " + lesCases[x][y].contenir().getType());
 			if (occupant.getEquipe() != lesCases[x][y].contenir().getEquipe()) {
 				System.out.println("FIGHT !!");			
 				
-				String resultatbataille = null;
+				int resultatbataille = 0;
 				try {
 					resultatbataille = serveur.bataille(occupant,lesCases[x][y].contenir(), null, null);
 				} catch (RemoteException e) {
@@ -76,9 +87,9 @@ public class Plateau implements Serializable {
 					e.printStackTrace();
 				}
 				
-				String resultat = resultatbataille.substring(resultatbataille.length()-1);
+				int resultat = resultatbataille;
 				
-				if (resultat == "1" ) {
+				if (resultat == 1 ) {
 					lesCases[x][y].contenir().getEquipe().supprimerPiece(lesCases[x][y].contenir());
 					lesCases[x][y].setOccupant(occupant);
 				}

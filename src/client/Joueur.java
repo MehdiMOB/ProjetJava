@@ -6,6 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+import commun.ClientJoueur;
 import commun.Echec;
 import creation.Clavier;
 import creation.CreerProtagoniste;
@@ -14,6 +15,7 @@ import creation.Setup;
 import graphique.InterfacePlateau;
 import jeu.Equipe;
 import jeu.Plateau;
+import protagonistes.Piece;
 
 /**
  * Classe exécutée coté client qui lui permet de jouer en ligne à un jeu de type échecs
@@ -90,21 +92,21 @@ public class Joueur {
 
 		if (camp.equals("homme")) {
 			plateau = new Plateau(equipeJoueur, equipeAdversaire, null, null);
-			setup = new Setup(interfaceplateau,plateau,equipeJoueur, equipeAdversaire);
+			setup = new Setup(nomJoueur, interfaceplateau,plateau,equipeJoueur, equipeAdversaire);
 		} else {
 			plateau = new Plateau(equipeAdversaire, equipeJoueur, null, null);
-			setup = new Setup(interfaceplateau, plateau, equipeAdversaire, equipeJoueur);
+			setup = new Setup(nomJoueur, interfaceplateau, plateau, equipeAdversaire, equipeJoueur);
 		}
 
 
 		setup.positionner();
 		setup.afficherSetup();
 
-		jouer(setup, camp);
+		jouer(clientjoueur, nomJoueur, setup, camp);
 	}		
 
 	// Déroulement du jeu
-	private static void jouer(Setup setup, String camp) {
+	private static void jouer(ClientJoueur joueur, String nomJoueur, Setup setup, String camp) throws RemoteException {
 
 		int choix=0;
 		int option=0;
@@ -125,10 +127,10 @@ public class Joueur {
 					int numProtagoniste = Clavier.entrerClavierInt()-1;
 					System.out.println("Vous avez choisi le protagoniste "+ setup.hommes.getPiece(numProtagoniste).getNom());
 					
-					// Déplacement
-					DeplacerJoueur homme_deplacement = new DeplacerJoueur(setup.interfacePlateau,setup.plateau,setup.hommes.getPiece(numProtagoniste));
-					homme_deplacement.deplacement();
 					
+					// Déplacement de la pièce et mise à jour de l'interface plateau
+					DeplacerJoueur homme_deplacement = new DeplacerJoueur(nomJoueur, setup.interfacePlateau,setup.plateau,setup.hommes.getPiece(numProtagoniste));
+					homme_deplacement.deplacement();					
 	
 					setup.afficherSetup();
 	
@@ -137,7 +139,22 @@ public class Joueur {
 						break;
 					}
 					monTour = false;
-				}	
+				} else {
+					// Mise en attente d'une action du joueur adverse
+					System.out.println("attente");
+					
+					joueur.attendreTour();	// A revoir
+					
+					
+					System.out.println("récupération coup adverse");
+					// Boolean pouvoirJouer = joueur.getTour();
+					Piece pieceAdverse = joueur.getPiece();
+					String[] deplacement = joueur.getDeplacement().split("%_%");					
+					DeplacerJoueur deplacement_adversaire = new DeplacerJoueur(nomJoueur, setup.interfacePlateau, setup.plateau, pieceAdverse);
+					deplacement_adversaire.deplacer(Integer.valueOf(deplacement[0]), Integer.valueOf(deplacement[1]));
+					setup.afficherSetup();
+					monTour = true;
+				}
 				
 			} else {
 				if (monTour) {	
@@ -146,11 +163,24 @@ public class Joueur {
 					System.out.println(setup.dragons.afficherPieces());
 					int numDragon = Clavier.entrerClavierInt()-1;
 					System.out.println("Vous avez choisi le protagoniste "+ setup.dragons.getPiece(numDragon).getNom());
-					DeplacerJoueur dragon_deplacement = new DeplacerJoueur(setup.interfacePlateau,setup.plateau,setup.dragons.getPiece(numDragon));
+					DeplacerJoueur dragon_deplacement = new DeplacerJoueur(nomJoueur, setup.interfacePlateau,setup.plateau,setup.dragons.getPiece(numDragon));
 					dragon_deplacement.deplacement();
 					setup.afficherSetup();
 					monTour = false;
-				}	
+					
+				} else {
+					// Mise en attente d'une action du joueur adverse
+					joueur.attendreTour();
+					
+					
+					
+					Piece pieceAdverse = joueur.getPiece();
+					String[] deplacement = joueur.getDeplacement().split("%_%");					
+					DeplacerJoueur deplacement_adversaire = new DeplacerJoueur(nomJoueur, setup.interfacePlateau, setup.plateau, pieceAdverse);
+					deplacement_adversaire.deplacer(Integer.valueOf(deplacement[0]), Integer.valueOf(deplacement[1]));
+					setup.afficherSetup();
+					monTour = true;					
+				}
 			}
 		}
 		System.out.println("Choisir une option: ");

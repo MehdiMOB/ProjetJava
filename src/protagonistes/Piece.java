@@ -5,13 +5,8 @@ import java.util.Random;
 
 import creation.NombreAleatoire;
 import jeu.Equipe;
-import protagonistes.Homme;
-import protagonistes.Dragon;
-import protagonistes.Reine;
-import protagonistes.Roi;
 import tresor.Arme;
 import tresor.Armure;
-import protagonistes.Heros;
 
 public class Piece implements Serializable {
 	
@@ -48,9 +43,9 @@ public class Piece implements Serializable {
 		}
 		
 	}
-	public void rejoindreEquipe(jeu.Equipe equipe2) {
+	public void rejoindreEquipe(Equipe equipe) {
 		
-		this.equipe = equipe2;
+		this.equipe = equipe;
 	}
 	
 	public Equipe getEquipe() {
@@ -85,7 +80,7 @@ public class Piece implements Serializable {
 			vie = Heros.getVIE();
 		}
 			
-		System.out.println("le joueur "+getType()+" a gagné "+ "et retrouve sa vie de " +vie+"\n");
+		System.out.println("le joueur " + getType() + " a gagné " + "et retrouve sa vie de " + vie + "\n");
 	}
 	
 	public void quitterEquipe() {
@@ -98,7 +93,7 @@ public class Piece implements Serializable {
 	
 	public void ajouterArmure(Armure armure) {
 		this.armure.setProtection(armure.getProtection());
-		System.out.println("le joueur "+getType()+" possède desormais une armure de "+this.armure.getProtection()+" de points de protection\n");
+		System.out.println("le joueur " + getType() + " possède desormais une armure de " + this.armure.getProtection() + " de points de protection\n");
 	}
 	
 	public void ajouteArme(Arme arme) {
@@ -109,7 +104,7 @@ public class Piece implements Serializable {
 //			this.arme.setDegat(degat);
 //		}
 		this.arme.setDegat(arme.getDegat());
-		System.out.println("le joueur "+getType()+" possède desormais une arme, qui fera subir des degats de "+this.arme.getDegat()+" à ses prochains adversaires\n");
+		System.out.println("le joueur "+getType()+" possède desormais une arme, qui fera subir des degats de " + this.arme.getDegat() + " à ses prochains adversaires\n");
 	}
 
 	public void gagnerTresor(Arme arme,Armure armure) {
@@ -121,15 +116,13 @@ public class Piece implements Serializable {
 		}
 	}
 	
-
-	
 	public Arme getArme() {
 		return arme;
 	}
+	
 	public Armure getArmure() {
 		return armure;
 	}
-
 	
 	public String getNom() {
 		return nom;

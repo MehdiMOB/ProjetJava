@@ -32,8 +32,12 @@ public class Equipe implements Serializable {
 		piece.quitterEquipe();
 		this.nbEffectif--;
 	}
-	public Piece getPiece (int i ) {
-		return this.combattants.get(i);
+	public Piece getPiece (int i) {
+		if (i < combattants.size()) {
+			return this.combattants.get(i);
+		}else {
+			return this.combattants.get(1);
+		}
 	}
 	
 	

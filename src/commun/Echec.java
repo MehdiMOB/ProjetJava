@@ -33,6 +33,13 @@ public interface Echec extends Remote {
 	 */
 	public int creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException;
 
+	/**
+	 * Permet de déplacer une pièce vers una case vide et de laisser son tour à l'autre joueur
+	 * 
+	 * @param pièce à déplacer, coordonnées de la case de destination
+	 * @throws RemoteException
+	 */	
+	void deplacerPiece(String nomJoueur, Piece occupant, int x, int y) throws RemoteException;
 	
 	/**
 	 * Permet de lancer un combat entre 2 pièce de jeu
@@ -40,7 +47,7 @@ public interface Echec extends Remote {
 	 * @return déroulé de la bataille et pièce gagnate sous la forme d'une chaine de caractères
 	 * @throws RemoteException
 	 */	
-	public String bataille(Piece A , Piece B, Arme arme, Armure armure) throws RemoteException;
+	public int bataille(Piece A , Piece B, Arme arme, Armure armure) throws RemoteException;
 	
 	/**
 	 * Methode qui permet au joueur de sauvegarder une partie en cours sur le serveur
@@ -52,7 +59,9 @@ public interface Echec extends Remote {
 	 * Methode qui permet au joueur de récupérer une partie stockée sur le serveur et de continuer à jouer
 	 * @throws RemoteException
 	 */
-	void restaurerPartie() throws RemoteException;	
+	void restaurerPartie() throws RemoteException;
+
+		
 	
 
 }

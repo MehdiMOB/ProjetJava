@@ -20,6 +20,7 @@ public class Setup implements Serializable {
 	public Equipe dragons ;
 	public InterfacePlateau interfacePlateau ;
 	public Plateau plateau;
+	String nomJoueur;
 	
 	
 	/**
@@ -31,7 +32,8 @@ public class Setup implements Serializable {
 	 * @param dragons
 	 */
 	
-	public Setup(InterfacePlateau interfacePlateau, Plateau plateau, Equipe hommes , Equipe dragons) {
+	public Setup(String nomJoueur, InterfacePlateau interfacePlateau, Plateau plateau, Equipe hommes , Equipe dragons) {
+		this.nomJoueur = nomJoueur;
 		this.interfacePlateau=interfacePlateau;
 		this.hommes = hommes;
 		this.dragons = dragons ;
@@ -48,7 +50,7 @@ public class Setup implements Serializable {
 		
 		for (int i = 0 ; i <hommes.getNbEffectif() ; i++ ) {
 			interfacePlateau.ajout_Piece(hommes.getPiece(i), row, column) ;
-			plateau.occuperCase(hommes.getPiece(i), row -1, column -1);
+			plateau.occuperCase(nomJoueur, hommes.getPiece(i), row -1, column -1);
 			column ++;
 			if (column == 8) {
 				column=1;
@@ -62,7 +64,7 @@ public class Setup implements Serializable {
 		column = 8;
 		for (int i = 0 ; i <dragons.getNbEffectif() ; i++) {
 			interfacePlateau.ajout_Piece(dragons.getPiece(i), row, column) ;
-			plateau.occuperCase(dragons.getPiece(i), row -1, column -1);
+			plateau.occuperCase(nomJoueur, dragons.getPiece(i), row -1, column -1);
 			column --;
 			if (column == 1) {
 				column=8;

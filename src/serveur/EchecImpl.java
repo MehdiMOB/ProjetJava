@@ -74,13 +74,27 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	}
 	
 	
+	@Override
+	public void deplacerPiece(String nomJoueur, Piece occupant, int x, int y) throws RemoteException {
+
+		if (dragon.equals(nomJoueur)){
+			joueurDragon.attendreAdversaire();
+			joueurHomme.setDeplacement(occupant, x + "%_%" + y);
+			joueurHomme.arriveeAdversaire();			
+		}else{
+			joueurHomme.attendreAdversaire();
+			joueurDragon.setDeplacement(occupant, x + "%_%" + y);
+			joueurDragon.arriveeAdversaire();
+		}
+	}
+	
 	/**
 	 * Permet de lancer un combat entre 2 pièce de jeu
 	 * 
 	 * @return déroulé de la bataille et pièce gagnate sous la forme d'une chaine de caractères
 	 * @throws RemoteException
 	 */
-	public String bataille(Piece A , Piece B, Arme arme, Armure armure) {
+	public int bataille(Piece A , Piece B, Arme arme, Armure armure) {
 		
 		
 		Random r = new Random();
@@ -126,6 +140,9 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		// TODO Auto-generated method stub
 
 	}
+
+
+	
 	
 
 
