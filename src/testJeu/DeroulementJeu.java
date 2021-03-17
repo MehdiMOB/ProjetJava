@@ -49,7 +49,7 @@ public class DeroulementJeu {
 			String nomEquipeDragons = Clavier.entrerClavierString();
 			dragons = new Equipe(nomEquipeDragons);
 		
-		CreerProtagoniste nouveauxProtagonistes= new CreerProtagoniste(hommes,dragons);
+		CreerProtagoniste nouveauxProtagonistes= new CreerProtagoniste();
 		nouveauxProtagonistes.creerProtagoniste();
 		
 		nouvellesArmes = new CreerArmes(); 

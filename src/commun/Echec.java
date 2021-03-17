@@ -19,11 +19,12 @@ public interface Echec extends Remote {
 
 	/**
 	 * Methode qui permet au joueur de démarrer une partie et retourne l'équipe qui lui a été affectée
+	 * @param string 
 	 * @param nom du joueur
 	 * @return camp qui lui est affecté
 	 * @throws RemoteException
 	 */
-	String demarrerPartie(String nomJoueur, ClientJoueur joueur) throws RemoteException;	
+	String demarrerPartie(String nomJoueur, ClientJoueur joueur, String chatJoueur) throws RemoteException;	
 
 	/**
 	 * Methode qui permet la création de l'équipe 
@@ -31,7 +32,7 @@ public interface Echec extends Remote {
 	 * @return 0 si tout s'est bien passé, 1 sinon
 	 * @throws RemoteException
 	 */
-	public int creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException;
+	public String creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException;
 
 	/**
 	 * Permet de déplacer une pièce vers una case vide et de laisser son tour à l'autre joueur
@@ -60,7 +61,9 @@ public interface Echec extends Remote {
 	 * @throws RemoteException
 	 */
 	void restaurerPartie() throws RemoteException;
-
+	
+	
+	public boolean tourJoueur(String nomJoueur) throws RemoteException;
 		
 	
 

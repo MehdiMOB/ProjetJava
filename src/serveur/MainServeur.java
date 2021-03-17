@@ -3,6 +3,7 @@ package serveur;
 import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -20,11 +21,11 @@ public class MainServeur {
 	}
 
 	public static void main(String[] args) throws RemoteException, MalformedURLException, AlreadyBoundException {
+		//System.setSecurityManager(new RMISecurityManager());
 		Registry registry = null;
 		// Réservation d'un port pour mettre a disposition l'objet jeu
 		try {
 			registry = LocateRegistry.getRegistry(1099);
-			registry.list();
 		} catch (RemoteException e) {
 			registry = LocateRegistry.createRegistry(1099);
 		}
@@ -32,9 +33,9 @@ public class MainServeur {
 		EchecImpl echec = new EchecImpl();
 		// Liaison de l'objet jeu au port réservé
 		try {
-			Naming.bind("Echec", echec);
+			Naming.bind("rmi://localhost:1099/Echec", echec);
 		} catch (AlreadyBoundException e) {
-			Naming.rebind("Echec", echec);
+			Naming.rebind("rmi://localhost:1099/Echec", echec);
 		}	
 
 	}

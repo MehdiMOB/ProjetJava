@@ -1,9 +1,11 @@
 package client;
 
 import java.rmi.Naming;
+
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.util.Scanner;
 
 import commun.ClientJoueur;
@@ -27,7 +29,7 @@ import protagonistes.Piece;
 public class Joueur {	
 
 	
-	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException{
+	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException, InterruptedException{
 
 		//
 		CreerProtagoniste creation = new CreerProtagoniste();
@@ -45,16 +47,21 @@ public class Joueur {
 
 		// Création d'un scanner sur l'interface du système afin de récupérer des informations saisies par l'utilisateur
 		Scanner scan = new Scanner(System.in);
-
+		
+		
 		// Récupération de l'objet partagé par le serveur et ionstanciation
-		Echec serveur = (Echec) Naming.lookup("rmi://localhost/Echec");
+		Echec serveur = (Echec) Naming.lookup("rmi://localhost:1099/Echec");
 
 
 		// Récupération du camp 
 		System.out.println("Bonjour, veuillez saisir votre nom \n");
 		nomJoueur = scan.nextLine();
+		
+		Chat server = new Chat(nomJoueur);	
+    	
+    	Naming.rebind("rmi://localhost:1099/"+nomJoueur, server); //
 
-		camp = serveur.demarrerPartie(nomJoueur, clientjoueur); 
+		camp = serveur.demarrerPartie(nomJoueur, clientjoueur, "rmi://localhost:1099/"+nomJoueur); 
 
 
 
@@ -73,14 +80,10 @@ public class Joueur {
 
 
 		// Envoie de l'équipe créée au serveur quand adversaire connecté		
-		int success = serveur.creationEquipe(nomJoueur, equipeJoueur);
-
-		Boolean test = success != 0;
-
-		if (success != 0) {
-			System.err.println("Valeur de retour inattendue !");
-		}
-
+		String[] adversaire = serveur.creationEquipe(nomJoueur, equipeJoueur).split("%_%");
+		ChatInterface chat = (ChatInterface) Naming.lookup(adversaire[0]);
+		String nomAdversaire = adversaire[1];
+		
 		// Mise en attente de réception de l'équipe adverse
 		clientjoueur.attendreEquipeAdverse();
 
@@ -102,13 +105,13 @@ public class Joueur {
 		setup.positionner();
 		setup.afficherSetup();
 
-		jouer(clientjoueur, nomJoueur, setup, camp);
+		jouer(clientjoueur, nomJoueur, adversaire[1], setup, camp, (Chat) chat, serveur);
 	}		
 
 	// Déroulement du jeu
-	private static void jouer(ClientJoueur joueur, String nomJoueur, Setup setup, String camp) throws RemoteException {
+	private static void jouer(ClientJoueur joueur, String nomJoueur, String adversaire, Setup setup, String camp, Chat chat, Echec serveur) throws RemoteException, InterruptedException {
 
-		int choix=0;
+		//int choix=0;
 		int option=0;
 		boolean monTour = camp.equals("homme");
 		
@@ -143,7 +146,28 @@ public class Joueur {
 					// Mise en attente d'une action du joueur adverse
 					System.out.println("attente");
 					
-					joueur.attendreTour();	// A revoir
+					joueur.attendreTour();
+					Scanner s = new Scanner(System.in);
+					String msg;
+					
+					int choix;
+					do {
+					System.out.println("Que voulez-vous faire ?");
+					System.out.println("1 - Jouer un tour");
+					System.out.println("2 - Envoyer un message à l'adversaire");
+					
+					choix = s.nextInt();
+					if (choix == 2) {
+						msg=s.nextLine().trim();
+				    	msg="["+adversaire+"] "+msg;		    		
+			    		chat.sendMessage(msg);
+					}else {
+						Thread.sleep(100);
+						if (!serveur.tourJoueur(nomJoueur)) {
+							System.out.println("Ce n'est pas votre tour de jouer");
+						}
+					}
+					}while (choix==1 && serveur.tourJoueur(nomJoueur));
 					
 					
 					System.out.println("récupération coup adverse");
@@ -171,6 +195,28 @@ public class Joueur {
 				} else {
 					// Mise en attente d'une action du joueur adverse
 					joueur.attendreTour();
+					
+					Scanner s = new Scanner(System.in);
+					String msg;
+					
+					int choix;
+					do {
+					System.out.println("Que voulez-vous faire ?");
+					System.out.println("1 - Jouer un tour");
+					System.out.println("2 - Envoyer un message à l'adversaire");
+					
+					choix = s.nextInt();
+					if (choix == 2) {
+						msg=s.nextLine().trim();
+				    	msg="["+adversaire+"] "+msg;		    		
+			    		chat.sendMessage(msg);
+					}else {
+						Thread.sleep(100);
+						if (!serveur.tourJoueur(nomJoueur)) {
+							System.out.println("Ce n'est pas votre tour de jouer");
+						}
+					}
+					}while (choix==1 && serveur.tourJoueur(nomJoueur));
 					
 					
 					

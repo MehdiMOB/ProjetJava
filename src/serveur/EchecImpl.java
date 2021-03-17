@@ -28,6 +28,9 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	ClientJoueur joueurDragon;
 	String homme;
 	ClientJoueur joueurHomme;
+	String chatDragon;
+	String chatHomme;
+	String tour = "";
 	
 	/**
 	 * Instancie un nouveau jeu
@@ -38,18 +41,20 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		
 	
 	@Override
-	public String demarrerPartie(String nomJoueur, ClientJoueur joueur) throws RemoteException {
+	public String demarrerPartie(String nomJoueur, ClientJoueur joueur, String chatJoueur) throws RemoteException {
 		
 		// Le premier joueur a l'équipe dragon et se met en attente de l'adversaire
 		if (dragon == null) {
 			dragon = nomJoueur;
 			joueurDragon = joueur;
+			chatDragon = chatJoueur;
 			
 			return "dragon";
 		}else {
 		// Le deuxième joueur a l'équipe des hommes et informe le premier joueur qu'il a un nouvel adversaire	
 			homme = nomJoueur;
 			joueurHomme = joueur;
+			chatHomme = chatJoueur;
 			joueurDragon.arriveeAdversaire();			
 			return"homme";
 		}
@@ -63,29 +68,46 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	 * @return 0 si tout s'est bien passé, 1 sinon
 	 * @throws RemoteException
 	 */	
-	public int creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException {
+	public String creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException {
 		// TODO Auto-generated method stub
 		
+		int joueurReady = 0; 
+		if(joueurReady > 1) {
+			tour = "homme";
+		}
 		if (dragon.equals(nomJoueur)){
-			return joueurHomme.equipeAdverse(equipe);
+			joueurReady++;
+			joueurHomme.equipeAdverse(equipe);
+			return chatHomme+ "%_%" +homme;
 		}else{
-			return joueurDragon.equipeAdverse(equipe);
+			joueurReady++;
+			joueurDragon.equipeAdverse(equipe);
+			return  chatDragon+ "%_%" +dragon; 
 		}
 	}
 	
+	public boolean tourJoueur(String nomJoueur) throws RemoteException{
+		if (dragon.equals(nomJoueur)){
+			return tour=="dragon";
+		}else{
+			
+			return tour=="homme";
+		}
+	}
 	
 	@Override
 	public void deplacerPiece(String nomJoueur, Piece occupant, int x, int y) throws RemoteException {
-
-		if (dragon.equals(nomJoueur)){
-			joueurDragon.attendreAdversaire();
-			joueurHomme.setDeplacement(occupant, x + "%_%" + y);
-			joueurHomme.arriveeAdversaire();			
-		}else{
-			joueurHomme.attendreAdversaire();
-			joueurDragon.setDeplacement(occupant, x + "%_%" + y);
-			joueurDragon.arriveeAdversaire();
+		if(tourJoueur(nomJoueur)) {
+			if (dragon.equals(nomJoueur)){
+				tour = "homme";
+				joueurHomme.setDeplacement(occupant, x + "%_%" + y);
+							
+			}else{
+				tour ="dragon";
+				joueurDragon.setDeplacement(occupant, x + "%_%" + y);
+			}
 		}
+		
 	}
 	
 	/**

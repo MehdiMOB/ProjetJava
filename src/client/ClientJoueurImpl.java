@@ -1,10 +1,8 @@
 package client;
 
 import java.rmi.RemoteException;
+
 import java.rmi.server.UnicastRemoteObject;
-
-import com.sun.swing.internal.plaf.synth.resources.synth;
-
 import commun.ClientJoueur;
 import jeu.Equipe;
 import protagonistes.Piece;
