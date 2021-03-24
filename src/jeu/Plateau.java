@@ -64,7 +64,7 @@ public class Plateau implements Serializable {
 			// Envoi du déplacement au joueur adverse
 			if (nomJoueur != "") {
 					try {
-						this.serveur.deplacerPiece(nomJoueur, occupant, x, y);						
+						this.serveur.deplacerPiece(nomJoueur, occupant, x+1, y+1);						
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

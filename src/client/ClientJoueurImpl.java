@@ -16,52 +16,29 @@ import protagonistes.Piece;
 
 public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueur {
 
-	Equipe equipeAdverse;
+	Equipe equipeAdverse = null;
 	boolean adversairePresent = false;
 	String deplacementJoueur;
 	Piece piece = null;
+	Boolean tour = false;
 
 	protected ClientJoueurImpl() throws RemoteException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-
-	/**
-	 * Réception de messages
-	 * 
-	 * @param message à afficher
-	 * @throws RemoteException
-	 */
-	@Override
-	public void notification(String message) throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
-	 * Réception de la composition et de la position initiale de l'équipe adverse
-	 * 
-	 * @param objet Equipe représentant l'équipe adverse
-	 * @return 0 si tout s'est bien passé, 1 sinon
-	 * @throws RemoteException
-	 */
-	@Override	
-	public int equipeAdverse(Equipe equipe_adverse) throws RemoteException {
-		// TODO Auto-generated method stub
-		equipeAdverse = equipe_adverse;
-		synchronized(this) {
+	
+	public synchronized void attendreAdversaire() {
+		while (equipeAdverse == null){
 			try {
-				this.notify();
-				return 0;
-			} catch (Exception e) {
+				this.wait();
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
-		return 1;
 	}
+	
 	
 	/**
 	 * Permet de réveiller le joueur lors de l'arrivée d'un adversaire
@@ -83,54 +60,15 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 		}
 	}
 	
+		
 	/**
 	 * Permet d'accéder à l'équipe adverse mise à jour par le serveur
 	 * @return Equipe représentant l'équipe adverse
 	 */
 	public Equipe getEquipeAdverse() {
-		return equipeAdverse;
+		return this.equipeAdverse;
 	}
-	
-	/**
-	 * Permet de se mettre en attente d'une action de la part du joueur 
-	 * 
-	 * @throws RemoteException
-	 */	
-	public synchronized void attendreAdversaire() throws RemoteException{
-		while (!adversairePresent){
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	/**
-	 * Permet de se mettre en attente d'une action de la part du joueur 
-	 * 
-	 * @throws RemoteException
-	 */	
-	public synchronized void attendreTour() throws RemoteException{
-		try {
-			this.wait();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}	
-	
-	public synchronized void attendreEquipeAdverse() {
-		while (equipeAdverse == null){
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
+		
 	
 	/**
 	 * Permet de récupérer la piece adverse à déplacer
@@ -160,5 +98,12 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 		this.piece = piece;
 		this.deplacementJoueur = deplacement;
 	}
+
+
+	@Override
+	public void setEquipeAdverse(Equipe equipe_adverse) throws RemoteException {
+		this.equipeAdverse = equipe_adverse;
+	}
+
 
 }

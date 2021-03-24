@@ -42,6 +42,7 @@ public class Setup implements Serializable {
 	
 	
 	public void positionner() {
+		
 		interfacePlateau.creer_Plateau();
 		
 		// Positionnement des pièces de l'équipe homme à partir du coin supérieur gauche
@@ -50,21 +51,20 @@ public class Setup implements Serializable {
 		
 		for (int i = 0 ; i <hommes.getNbEffectif() ; i++ ) {
 			interfacePlateau.ajout_Piece(hommes.getPiece(i), row, column) ;
-			plateau.occuperCase(nomJoueur, hommes.getPiece(i), row -1, column -1);
+			plateau.occuperCase("", hommes.getPiece(i), row -1, column -1);
 			column ++;
 			if (column == 8) {
 				column=1;
 				row +=1;
-			}
-			
+			}			
 		}
 		
 		// Positionnement des pièces de l'équipe dragon à partir du coin inférieur droit
 		row = 8;
 		column = 8;
-		for (int i = 0 ; i <dragons.getNbEffectif() ; i++) {
+		for (int i = 0 ; i < dragons.getNbEffectif() ; i++) {
 			interfacePlateau.ajout_Piece(dragons.getPiece(i), row, column) ;
-			plateau.occuperCase(nomJoueur, dragons.getPiece(i), row -1, column -1);
+			plateau.occuperCase("", dragons.getPiece(i), row -1, column -1);
 			column --;
 			if (column == 1) {
 				column=8;

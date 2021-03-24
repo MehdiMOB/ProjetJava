@@ -1,16 +1,12 @@
 package serveur;
 
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
-
 import commun.ClientJoueur;
 import commun.Echec;
 import jeu.Equipe;
 import protagonistes.Piece;
-import testJeu.DeroulementJeu;
 import tresor.Arme;
 import tresor.Armure;
 
@@ -31,6 +27,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	String chatDragon;
 	String chatHomme;
 	String tour = "";
+	int joueurReady = 0; 
 	
 	/**
 	 * Instancie un nouveau jeu
@@ -47,15 +44,15 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		if (dragon == null) {
 			dragon = nomJoueur;
 			joueurDragon = joueur;
-			chatDragon = chatJoueur;
-			
+			chatDragon = chatJoueur;			
 			return "dragon";
 		}else {
 		// Le deuxième joueur a l'équipe des hommes et informe le premier joueur qu'il a un nouvel adversaire	
 			homme = nomJoueur;
 			joueurHomme = joueur;
 			chatHomme = chatJoueur;
-			joueurDragon.arriveeAdversaire();			
+			joueurDragon.arriveeAdversaire();
+			joueurHomme.arriveeAdversaire();			
 			return"homme";
 		}
 		
@@ -71,40 +68,41 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	public String creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException {
 		// TODO Auto-generated method stub
 		
-		int joueurReady = 0; 
-		if(joueurReady > 1) {
-			tour = "homme";
+		if(joueurReady > 0) {
+			setTour("homme");
 		}
 		if (dragon.equals(nomJoueur)){
 			joueurReady++;
-			joueurHomme.equipeAdverse(equipe);
-			return chatHomme+ "%_%" +homme;
+			joueurHomme.setEquipeAdverse(equipe);	
+			return chatHomme + "%_%" + homme;
 		}else{
 			joueurReady++;
-			joueurDragon.equipeAdverse(equipe);
-			return  chatDragon+ "%_%" +dragon; 
+			joueurDragon.setEquipeAdverse(equipe);
+			return  chatDragon + "%_%" + dragon; 
 		}
 	}
 	
 	public boolean tourJoueur(String nomJoueur) throws RemoteException{
+
+		System.out.println("tour :" + getTour());
+		
 		if (dragon.equals(nomJoueur)){
-			return tour=="dragon";
-		}else{
-			
-			return tour=="homme";
+			return getTour() == "dragon";
+		}else{			
+			return getTour() == "homme";
 		}
 	}
 	
 	@Override
 	public void deplacerPiece(String nomJoueur, Piece occupant, int x, int y) throws RemoteException {
+		System.out.println("Deplacer piece " + nomJoueur);
 		if(tourJoueur(nomJoueur)) {
-			if (dragon.equals(nomJoueur)){
-				tour = "homme";
+			if (dragon.equals(nomJoueur)){				
 				joueurHomme.setDeplacement(occupant, x + "%_%" + y);
-							
-			}else{
-				tour ="dragon";
+				setTour("homme");							
+			}else{				
 				joueurDragon.setDeplacement(occupant, x + "%_%" + y);
+				setTour("dragon");
 			}
 		}
 		
@@ -161,6 +159,16 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	public void restaurerPartie() throws RemoteException {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	private String getTour() {
+		return tour;
+	}
+
+
+	private void setTour(String tour) {
+		this.tour = tour;
 	}
 
 

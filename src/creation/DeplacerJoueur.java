@@ -62,7 +62,7 @@ public class DeplacerJoueur implements Serializable {
 		int cord_x= 1 + plateau.getCoordonneeX(piece);
 		int cord_y= 1 + plateau.getCoordonneeY(piece);
 		
-		Piece gagnant = plateau.occuperCase(nomJoueur, piece, x, y);
+		Piece gagnant = plateau.occuperCase(nomJoueur, piece, x-1, y-1);
 		
 		plateau.libererCase(cord_x-1, cord_y-1);
 		

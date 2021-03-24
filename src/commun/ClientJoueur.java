@@ -15,27 +15,17 @@ import protagonistes.Piece;
  */
 
 public interface ClientJoueur extends Remote {
-
-	/**
-	 * Réception de messages
-	 * 
-	 * @param message à afficher
-	 * @throws RemoteException
-	 */
-	public void notification(String message) throws RemoteException;
 	
 	/**
 	 * Réception de la composition et de la position initiale de l'équipe adverse
 	 * 
-	 * @param 0 si tout s'est bien passé, 1 sinon
 	 * @throws RemoteException
 	 */
-	public int equipeAdverse(Equipe equipe_adverse) throws RemoteException;
+	public void setEquipeAdverse(Equipe equipe_adverse) throws RemoteException;
 	
 	/**
 	 * Permet de réveiller le joueur lors de l'arrivée d'un adversaire ou d'une action de ce dernier
 	 * 
-	 * @return 0 si tout s'est bien passé, 1 sinon
 	 * @throws RemoteException
 	 */
 	public void arriveeAdversaire() throws RemoteException;
@@ -66,7 +56,6 @@ public interface ClientJoueur extends Remote {
 	 * 
 	 * @throws RemoteException
 	 */	
-	public void setDeplacement(Piece piece, String deplacement) throws RemoteException;
+	public void setDeplacement(Piece piece, String deplacement) throws RemoteException;	
 	
-	public void attendreTour() throws RemoteException;
 }
