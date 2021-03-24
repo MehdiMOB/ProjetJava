@@ -156,7 +156,9 @@ public class Joueur {
 					Piece pieceAdverse = getClientjoueur().getPiece();
 					String[] deplacement = getClientjoueur().getDeplacement().split("%_%");					
 					DeplacerJoueur deplacement_adversaire = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau, setup.plateau, pieceAdverse);
-					deplacement_adversaire.deplacer(Integer.valueOf(deplacement[0]), Integer.valueOf(deplacement[1]));
+					System.out.println(getClientjoueur().getDeplacement());
+					System.out.println(Integer.valueOf(deplacement[0]));
+					deplacement_adversaire.deplacer(Integer.valueOf(deplacement[0]), Integer.valueOf(deplacement[1]), true);
 					setup.afficherSetup();
 					monTour = true;
 				}
@@ -181,7 +183,7 @@ public class Joueur {
 					Piece pieceAdverse = getClientjoueur().getPiece();
 					String[] deplacement = getClientjoueur().getDeplacement().split("%_%");					
 					DeplacerJoueur deplacement_adversaire = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau, setup.plateau, pieceAdverse);
-					deplacement_adversaire.deplacer(Integer.valueOf(deplacement[0]), Integer.valueOf(deplacement[1]));
+					deplacement_adversaire.deplacer(Integer.valueOf(deplacement[0]), Integer.valueOf(deplacement[1]), true);
 					setup.afficherSetup();
 					monTour = true;
 					

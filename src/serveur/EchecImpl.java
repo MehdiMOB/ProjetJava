@@ -84,7 +84,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	
 	public boolean tourJoueur(String nomJoueur) throws RemoteException{
 
-		System.out.println("tour :" + getTour());
+		//System.out.println("tour :" + getTour());
 		
 		if (dragon.equals(nomJoueur)){
 			return getTour() == "dragon";
@@ -95,7 +95,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	
 	@Override
 	public void deplacerPiece(String nomJoueur, Piece occupant, int x, int y) throws RemoteException {
-		System.out.println("Deplacer piece " + nomJoueur);
+		System.out.println("Deplacer piece " + nomJoueur + x + y);
 		if(tourJoueur(nomJoueur)) {
 			if (dragon.equals(nomJoueur)){				
 				joueurHomme.setDeplacement(occupant, x + "%_%" + y);

@@ -54,17 +54,26 @@ public class DeplacerJoueur implements Serializable {
 			y = Clavier.entrerClavierInt();
 		} while ((x > 8) || (y > 8));
 		
-		deplacer(x,y);		
+		deplacer(x,y,false);		
 	}
 	
-	public void deplacer(int x, int y) {
+	public void deplacer(int x, int y, boolean local) {
 		//bloc try catch 
 		int cord_x= 1 + plateau.getCoordonneeX(piece);
 		int cord_y= 1 + plateau.getCoordonneeY(piece);
 		
-		Piece gagnant = plateau.occuperCase(nomJoueur, piece, x-1, y-1);
+		Piece gagnant;
+		if (local) {
+			gagnant = plateau.occuperCase("", piece, x-1, y-1);
+		}else {
+			gagnant = plateau.occuperCase(nomJoueur, piece, x-1, y-1);
+		}
+		
+		System.out.println(cord_x-1);
+		System.out.println(cord_y-1);
 		
 		plateau.libererCase(cord_x-1, cord_y-1);
+		
 		
 		if (gagnant == piece) {
 			interfaceplateau.eliminer_Piece(piece, cord_x, cord_y);
