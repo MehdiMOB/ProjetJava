@@ -141,9 +141,7 @@ public class Joueur {
 					// Déplacement de la pièce et mise à jour de l'interface plateau
 					DeplacerJoueur homme_deplacement = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau,setup.plateau,setup.hommes.getPiece(numProtagoniste));
 					homme_deplacement.deplacement();					
-	
 					setup.afficherSetup();
-	
 					if (setup.dragons.getNbEffectif() == 0) {
 						System.out.println("Les hommes ont gagné ");
 						break;
@@ -156,8 +154,6 @@ public class Joueur {
 					Piece pieceAdverse = getClientjoueur().getPiece();
 					String[] deplacement = getClientjoueur().getDeplacement().split("%_%");					
 					DeplacerJoueur deplacement_adversaire = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau, setup.plateau, pieceAdverse);
-					System.out.println(getClientjoueur().getDeplacement());
-					System.out.println(Integer.valueOf(deplacement[0]));
 					deplacement_adversaire.deplacer(Integer.valueOf(deplacement[0]), Integer.valueOf(deplacement[1]), true);
 					setup.afficherSetup();
 					monTour = true;
@@ -170,9 +166,14 @@ public class Joueur {
 					System.out.println(setup.dragons.afficherPieces());
 					int numDragon = Clavier.entrerClavierInt()-1;
 					System.out.println("Vous avez choisi le protagoniste "+ setup.dragons.getPiece(numDragon).getNom());
+					
 					DeplacerJoueur dragon_deplacement = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau,setup.plateau,setup.dragons.getPiece(numDragon));
 					dragon_deplacement.deplacement();
 					setup.afficherSetup();
+					if (setup.hommes.getNbEffectif() == 0) {
+						System.out.println("Les dragons ont gagné ");
+						break;
+					}
 					monTour = false;
 					
 				} else {

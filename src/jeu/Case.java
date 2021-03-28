@@ -23,10 +23,15 @@ public class Case implements Serializable {
 		return coordonnee_y;
 	}
 
-	public Piece contenir () {
+	public Boolean contenir(Piece piece) {
 		
+		return !this.isVide() && piece.getNom().compareTo(occupant.getNom()) == 0 ;
+	}
+	
+	public Piece getPiece() {
 		return occupant;
 	}
+	
 	public boolean isVide() {
 		
 		return (occupant == null );

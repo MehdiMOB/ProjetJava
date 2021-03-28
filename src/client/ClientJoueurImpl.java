@@ -84,8 +84,7 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 	 * 
 	 * @throws RemoteException
 	 */	
-	public String getDeplacement() throws RemoteException{
-		
+	public String getDeplacement() throws RemoteException{		
 		return deplacementJoueur;
 	}
 	

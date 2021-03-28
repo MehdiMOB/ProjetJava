@@ -44,10 +44,10 @@ public class Plateau implements Serializable {
 	}
 
 	public String getSpecifique(int x, int y) {
-		if (lesCases[x][y].contenir() == null) {
+		if (lesCases[x][y].getPiece() == null) {
 			return " Case Vide";
 		}
-		return "Le joueur "+lesCases[x][y].contenir().getType()+" a gagné\n";
+		return "Le joueur "+lesCases[x][y].getPiece().getType()+" a gagné\n";
 
 	}
 	
@@ -75,13 +75,13 @@ public class Plateau implements Serializable {
 			
 		} else {
 			
-			System.out.println("La case est déjà occupée par " + lesCases[x][y].contenir().getType());
-			if (occupant.getEquipe() != lesCases[x][y].contenir().getEquipe()) {
+			System.out.println("La case est déjà occupée par " + lesCases[x][y].getPiece().getType());
+			if (occupant.getEquipe() != lesCases[x][y].getPiece().getEquipe()) {
 				System.out.println("FIGHT !!");			
 				
 				int resultatbataille = 0;
 				try {
-					resultatbataille = serveur.bataille(occupant,lesCases[x][y].contenir(), null, null);
+					resultatbataille = serveur.bataille(occupant,lesCases[x][y].getPiece(), null, null);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -90,16 +90,16 @@ public class Plateau implements Serializable {
 				int resultat = resultatbataille;
 				
 				if (resultat == 1 ) {
-					lesCases[x][y].contenir().getEquipe().supprimerPiece(lesCases[x][y].contenir());
+					lesCases[x][y].getPiece().getEquipe().supprimerPiece(lesCases[x][y].getPiece());
 					lesCases[x][y].setOccupant(occupant);
 				}
 				else {
 					occupant.getEquipe().supprimerPiece(occupant);
-					lesCases[x][y].setOccupant(lesCases[x][y].contenir());
+					lesCases[x][y].setOccupant(lesCases[x][y].getPiece());
 				}
 				
 			}
-			return lesCases[x][y].contenir();
+			return lesCases[x][y].getPiece();
 		}
 	}
 
@@ -110,10 +110,10 @@ public class Plateau implements Serializable {
 	
 
 	public int getCoordonneeX(Piece piece) {
-		
-		for (int i = 0 ; i<8 ; i++) {
+
+		for (int i = 0 ; i < 8 ; i ++) {
 			for (int y = 0 ; y < 8 ; y ++) {
-			if (lesCases[i][y].contenir()==piece) {
+			if (lesCases[i][y].contenir(piece)) {
 				return i;
 			}
 			}
@@ -125,7 +125,7 @@ public class Plateau implements Serializable {
 		
 		for (int x = 0 ; x<8 ; x++) {
 			for (int i= 0 ; i<8 ; i++ ) {
-			if (lesCases[x][i].contenir()==piece) {
+			if (lesCases[x][i].contenir(piece)) {
 				return i;
 			}
 			}
