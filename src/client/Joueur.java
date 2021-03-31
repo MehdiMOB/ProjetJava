@@ -34,7 +34,7 @@ public class Joueur {
 	
 	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException, InterruptedException{
 
-		//
+
 		CreerProtagoniste creation = new CreerProtagoniste();
 
 		Equipe equipeJoueur = null;
@@ -79,11 +79,13 @@ public class Joueur {
 		}
 
 		// Si premier, mise en attente de la connexion de l'adversaire
-		if (!getClientjoueur().adversairePresent) {
-			System.out.println("En recherche de joueurs ...");
-			getClientjoueur().attendreAdversaire();
+		Boolean adversairePresent = getClientjoueur().isAdversairePresent();
+		while(!adversairePresent) {
+			System.out.print("En recherche de joueurs ...");
+			Thread.sleep(5000);
+			adversairePresent = getClientjoueur().isAdversairePresent();
 		}
-
+		System.out.println("");
 
 		// Envoie de l'équipe créée au serveur quand l'adversaire est connecté		
 		String[] adversaire = serveur.creationEquipe(getNomJoueur(), equipeJoueur).split("%_%");
@@ -92,7 +94,7 @@ public class Joueur {
 		// Mise en attente de réception de l'équipe adverse
 		equipeAdversaire = getClientjoueur().getEquipeAdverse();
 		while(equipeAdversaire == null) {
-			System.out.println("Votre adversaire est en train de composer son équipe...");
+			System.out.print("Votre adversaire est en train de composer son équipe...");
 			Thread.sleep(5000);
 			equipeAdversaire = getClientjoueur().getEquipeAdverse();
 		}
@@ -120,11 +122,9 @@ public class Joueur {
 		//int choix=0;
 		int option=0;
 		boolean monTour = camp.equals("homme");
-		System.out.println(monTour);
 		
 		while (true) {
 			if (setup.hommes.getNbEffectif() == 0 ){
-
 				System.out.println("Les dragons ont gagné !");
 				break;
 			}
@@ -135,27 +135,26 @@ public class Joueur {
 					System.out.println("Entrer le type de protagoniste homme à contrôler :");
 					System.out.println(setup.hommes.afficherPieces());
 					int numProtagoniste = Clavier.entrerClavierInt()-1;
-					System.out.println("Vous avez choisi le protagoniste "+ setup.hommes.getPiece(numProtagoniste).getNom());
-					
+					System.out.println("Vous avez choisi le protagoniste "+ setup.hommes.getPiece(numProtagoniste).getNom());					
 					
 					// Déplacement de la pièce et mise à jour de l'interface plateau
 					DeplacerJoueur homme_deplacement = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau,setup.plateau,setup.hommes.getPiece(numProtagoniste));
 					homme_deplacement.deplacement();					
-					setup.afficherSetup();
-					if (setup.dragons.getNbEffectif() == 0) {
-						System.out.println("Les hommes ont gagné ");
-						break;
-					}
+					afficherGrille(setup);
 					monTour = false;
 				} else {				
-					
+					// attente du tour et récupération du tour adverse
 					attendreSonTour(adversaire, serveur);
-					System.out.println("Récupération du coup adverse :");
+					if (getClientjoueur().getResultatBataille() != "") {
+						System.out.println(getClientjoueur().getResultatBataille().substring(0, getClientjoueur().getResultatBataille().length() -1));
+					}else {
+						System.out.println("Récupération du coup adverse :");
+					}	
 					Piece pieceAdverse = getClientjoueur().getPiece();
 					String[] deplacement = getClientjoueur().getDeplacement().split("%_%");					
 					DeplacerJoueur deplacement_adversaire = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau, setup.plateau, pieceAdverse);
 					deplacement_adversaire.deplacer(Integer.valueOf(deplacement[0]), Integer.valueOf(deplacement[1]), true);
-					setup.afficherSetup();
+					afficherGrille(setup);
 					monTour = true;
 				}
 				
@@ -169,28 +168,27 @@ public class Joueur {
 					
 					DeplacerJoueur dragon_deplacement = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau,setup.plateau,setup.dragons.getPiece(numDragon));
 					dragon_deplacement.deplacement();
-					setup.afficherSetup();
-					if (setup.hommes.getNbEffectif() == 0) {
-						System.out.println("Les dragons ont gagné ");
-						break;
-					}
+					afficherGrille(setup);
 					monTour = false;
 					
 				} else {
-					
+					// attente du tour et récupération du tour adverse
 					attendreSonTour(adversaire, serveur);
-					System.out.println("Récupération du coup adverse :");
-
+					if (getClientjoueur().getResultatBataille() != "") {
+						System.out.println(getClientjoueur().getResultatBataille().substring(0, getClientjoueur().getResultatBataille().length() -1));
+					}else {
+						System.out.println("Récupération du coup adverse :");
+					}	
 					Piece pieceAdverse = getClientjoueur().getPiece();
 					String[] deplacement = getClientjoueur().getDeplacement().split("%_%");					
 					DeplacerJoueur deplacement_adversaire = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau, setup.plateau, pieceAdverse);
 					deplacement_adversaire.deplacer(Integer.valueOf(deplacement[0]), Integer.valueOf(deplacement[1]), true);
-					setup.afficherSetup();
-					monTour = true;
-					
+					afficherGrille(setup);
+					monTour = true;				
 				}
 			}
 		}
+		
 		System.out.println("Choisir une option: ");
 		System.out.println("1- Poursuivre le jeu ");
 		System.out.println("2- Sauvegarder et quitter \n");
@@ -205,10 +203,19 @@ public class Joueur {
 		}	
 	}
 
+	/***
+	 * Permet de joueur de chater en attendant son tour de jeu
+	 * 
+	 * @param adversaire : adresse du chat du joueur adverse
+	 * @param serveur : serveur du jeu pour connaitre le tour du joueur
+	 * @throws MalformedURLException
+	 * @throws RemoteException
+	 * @throws NotBoundException
+	 * @throws InterruptedException
+	 */
 	private static void attendreSonTour(String[] adversaire, Echec serveur) throws MalformedURLException, RemoteException, NotBoundException, InterruptedException  {
 		
 		// Mise en attente d'une action du joueur adverse
-		System.out.println("attente");
 		Chat chatAdverse = (Chat) Naming.lookup(adversaire[0]);
 		Scanner s = new Scanner(System.in);
 		String msg;
@@ -227,13 +234,11 @@ public class Joueur {
 		    	chatAdverse.sendMessage(msg);
 			}else {
 				Thread.sleep(100);
-				if (!serveur.tourJoueur(getNomJoueur())) {
-					System.out.println("la");
-					System.out.println("Ce n'est pas votre tour de jouer");
+				if (!serveur.tourJoueur(getNomJoueur()) && getClientjoueur().getResultatBataille() == "") {
+					System.out.println("Ce n'est pas à votre tour de jouer");
 				}
-				System.out.println("pas la");
 			}
-		} while(!serveur.tourJoueur(getNomJoueur()));		
+		} while(!serveur.tourJoueur(getNomJoueur()) && getClientjoueur().getResultatBataille() == "");
 	}
 
 	public static String getNomJoueur() {
@@ -246,6 +251,17 @@ public class Joueur {
 
 	private static ClientJoueurImpl getClientjoueur() {
 		return clientjoueur;
+	}
+	
+	private static void afficherGrille(Setup setup) {
+		setup.afficherSetup();
+		if (setup.dragons.getNbEffectif() == 0) {
+			System.out.println("Les hommes ont gagné ");
+		}
+		if (setup.hommes.getNbEffectif() == 0) {
+			System.out.println("Les dragons ont gagné ");
+		}
+		
 	}
 }
 

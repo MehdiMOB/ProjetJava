@@ -1,8 +1,13 @@
 package serveur;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
+
+import commun.Chat;
 import commun.ClientJoueur;
 import commun.Echec;
 import jeu.Equipe;
@@ -37,7 +42,13 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	}
 		
 	
-	@Override
+	/**
+	 * Methode qui permet au joueur de démarrer une partie et retourne l'équipe qui lui a été affectée
+	 * @param string 
+	 * @param nom du joueur
+	 * @return camp qui lui est affecté
+	 * @throws RemoteException
+	 */
 	public String demarrerPartie(String nomJoueur, ClientJoueur joueur, String chatJoueur) throws RemoteException {
 		
 		// Le premier joueur a l'équipe dragon et se met en attente de l'adversaire
@@ -51,8 +62,8 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 			homme = nomJoueur;
 			joueurHomme = joueur;
 			chatHomme = chatJoueur;
-			joueurDragon.arriveeAdversaire();
-			joueurHomme.arriveeAdversaire();			
+			joueurDragon.setAdversairePresent(true);
+			joueurHomme.setAdversairePresent(true);			
 			return"homme";
 		}
 		
@@ -60,13 +71,13 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 
 	
 	/**
-	 * Methode qui permet la création de l'équipe 
-	 * @param nom du joueur qui communiqie son équipe, ensemble des pièces de l'équipe sous forme de chaine de caractères
+	 *  Echange des équipe et du chat entre les joueurs
+	 *  
+	 * @param nom du joueur qui communique son équipe, ensemble des pièces de l'équipe sous forme de chaine de caractères
 	 * @return 0 si tout s'est bien passé, 1 sinon
 	 * @throws RemoteException
 	 */	
 	public String creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException {
-		// TODO Auto-generated method stub
 		
 		if(joueurReady > 0) {
 			setTour("homme");
@@ -82,9 +93,14 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		}
 	}
 	
-	public boolean tourJoueur(String nomJoueur) throws RemoteException{
-
-		//System.out.println("tour :" + getTour());
+	/**
+	 * Permet de savoir si c'est au joueur de joueur
+	 * 
+	 * @param nomJoueur
+	 * @return booléen qui indique si c'est au joueur de jouer
+	 * @throws RemoteException
+	 */
+	public boolean tourJoueur(String nomJoueur) throws RemoteException {
 		
 		if (dragon.equals(nomJoueur)){
 			return getTour() == "dragon";
@@ -93,9 +109,13 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		}
 	}
 	
-	@Override
+	/**
+	 * Permet de déplacer une pièce vers une case vide et de laisser son tour à l'autre joueur
+	 * 
+	 * @param pièce à déplacer, coordonnées de la case de destination
+	 * @throws RemoteException
+	 */	
 	public void deplacerPiece(String nomJoueur, Piece occupant, int x, int y) throws RemoteException {
-		System.out.println("Deplacer piece " + nomJoueur + x + y);
 		if(tourJoueur(nomJoueur)) {
 			if (dragon.equals(nomJoueur)){				
 				joueurHomme.setDeplacement(occupant, x + "%_%" + y);
@@ -104,48 +124,60 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 				joueurDragon.setDeplacement(occupant, x + "%_%" + y);
 				setTour("dragon");
 			}
-		}
-		
+		}		
 	}
 	
 	/**
-	 * Permet de lancer un combat entre 2 pièce de jeu
+	 * Permet de lancer un combat entre 2 pièces de jeu
 	 * 
 	 * @return déroulé de la bataille et pièce gagnate sous la forme d'une chaine de caractères
 	 * @throws RemoteException
 	 */
-	public int bataille(Piece A , Piece B, Arme arme, Armure armure) {
-		
-		
+	public String bataille(Piece A , Piece B, Arme arme, Armure armure, int x, int y) throws RemoteException {		
+		String histoire = "";
+
 		Random r = new Random();
 		while (!A.estMort()&& !B.estMort()) {
-		if (r.nextBoolean()) {
-			if (B.getArme().getDegat() == 0) {
-			A.subirAttaque(10);
+			if (r.nextBoolean()) {
+				if (B.getArme().getDegat() == 0) {
+					histoire += A.subirAttaque(10);
+				}else {
+					histoire += A.subirAttaque(B.getArme().getDegat());
+				}
 			}else {
-				A.subirAttaque(B.getArme().getDegat());
+				if(A.getArme().getDegat() == 0) {
+					histoire += B.subirAttaque(10);
+				}else {
+					histoire += B.subirAttaque(A.getArme().getDegat());	
+				}
 			}
 		}
-		else {
-			if(A.getArme().getDegat() == 0) {
-				B.subirAttaque(10);
-			}else {
-				B.subirAttaque(A.getArme().getDegat());	
-			}
-		}
-		}
+		Piece gagnant = null;
 		if (A.estMort()) {
-			B.renforceVie();
-			B.gagnerTresor(arme,armure);
-			
-			return 2;
+			gagnant = B;
+			histoire += B.renforceVie();
+			histoire += B.gagnerTresor(arme, armure);
+			histoire += "2";
+		} else {
+			gagnant = A;
+			histoire += A.renforceVie();
+			histoire += A.gagnerTresor(arme, armure);			
+			histoire += "1";
 		}
-		else {
-			A.renforceVie();
-			A.gagnerTresor(arme,armure);
-			return 1;
+		
+		try {
+			if (getTour() == "dragon") {
+				joueurHomme.setResultatBataille(histoire);
+				joueurHomme.setDeplacement(gagnant, x + "%_%" + y);
+			}else {
+				joueurDragon.setResultatBataille(histoire);
+				joueurDragon.setDeplacement(gagnant, x + "%_%" + y);
+			}
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	
+		return histoire;
 	}
 
 
@@ -160,20 +192,33 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		// TODO Auto-generated method stub
 
 	}
-
-
+	
+	/**
+	 * Permet de connaitre le tour en cours et donc le joueur
+	 * @return le tour sous forme de chaine de caractères
+	 */
 	private String getTour() {
 		return tour;
 	}
 
-
+	/**
+	 * Permet de changer le tour de jeu
+	 * @param tour
+	 */
 	private void setTour(String tour) {
 		this.tour = tour;
 	}
 
-
-	
-	
-
-
+	/**
+	 * 
+	 * @param tour
+	 * @return
+	 */
+	private String getJoueurTour(String tour) {
+		if (tour == "dragon") {
+			return dragon;
+		}else {
+			return homme;
+		}		
+	}
 }

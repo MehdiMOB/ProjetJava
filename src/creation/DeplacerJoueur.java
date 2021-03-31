@@ -57,23 +57,32 @@ public class DeplacerJoueur implements Serializable {
 		deplacer(x,y, false);		
 	}
 	
+	/**
+	 * Permet de déplacer une pièce et de libérer la case initiale
+	 * 
+	 * @param x 
+	 * @param y
+	 * @param local : permet de différencier le déplacement du joueur à transmettre via le serveur distant
+	 * et le déplacement de l'adversaire à effectuer seulement en local
+	 */
 	public void deplacer(int x, int y, boolean local) {
 
-		//bloc try catch 
 
 		int cord_x= 1 + plateau.getCoordonneeX(piece);
 		int cord_y= 1 + plateau.getCoordonneeY(piece);
 
+		plateau.libererCase(cord_x-1, cord_y-1);
+		
+		// Déplacement de la pièce et récupération de la pièce qui occupe la case
 		Piece gagnant;
+		
 		if (local) {
 			gagnant = plateau.occuperCase("", piece, x-1, y-1);
 		}else {
 			gagnant = plateau.occuperCase(nomJoueur, piece, x-1, y-1);
-		}
+		}		
 		
-		plateau.libererCase(cord_x-1, cord_y-1);
-		
-		
+		// Mise à jour de l'interface plateau affichée sur la console du joueur 
 		if (gagnant == piece) {
 			interfaceplateau.eliminer_Piece(piece, cord_x, cord_y);
 			interfaceplateau.ajout_Piece(piece, x, y);

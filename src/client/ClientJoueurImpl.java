@@ -21,46 +21,31 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 	String deplacementJoueur;
 	Piece piece = null;
 	Boolean tour = false;
+	String resultatBataille = "";
 
 	protected ClientJoueurImpl() throws RemoteException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	
-	public synchronized void attendreAdversaire() {
-		while (equipeAdverse == null){
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	
 	/**
-	 * Permet de réveiller le joueur lors de l'arrivée d'un adversaire
+	 * Réception de la composition et de la position initiale de l'équipe adverse
 	 * 
-	 * @return 0 si tout s'est bien passé, 1 sinon
 	 * @throws RemoteException
 	 */
-	public void arriveeAdversaire() throws RemoteException {
-		// TODO Auto-generated method stub
-		adversairePresent = true;
-		
-		synchronized(this) {
-			try {
-				this.notify();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+	public void setEquipeAdverse(Equipe equipe_adverse) throws RemoteException {
+		this.equipeAdverse = equipe_adverse;
+	}
+
+	/**
+	 * Mise à jour de la présence du joueur adverse par le serveur
+	 * 
+	 * @return booléen représentant la présence d'un adversaire
+	 * @throws RemoteException
+	 */
+	public void setAdversairePresent(boolean adversairePresent) throws RemoteException{
+		this.adversairePresent = adversairePresent;
 	}
 	
-		
 	/**
 	 * Permet d'accéder à l'équipe adverse mise à jour par le serveur
 	 * @return Equipe représentant l'équipe adverse
@@ -68,28 +53,9 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 	public Equipe getEquipeAdverse() {
 		return this.equipeAdverse;
 	}
-		
 	
 	/**
-	 * Permet de récupérer la piece adverse à déplacer
-	 * 
-	 * @throws RemoteException
-	 */	
-	public Piece getPiece() throws RemoteException{		
-		return piece;
-	}
-	
-	/**
-	 * Permet de récupérer le déplacement adverse
-	 * 
-	 * @throws RemoteException
-	 */	
-	public String getDeplacement() throws RemoteException{		
-		return deplacementJoueur;
-	}
-	
-	/**
-	 * Permet de stoker le déplacement du joueur
+	 * Permet au serveur de communiquer la pièce à déplacer et la destination
 	 * 
 	 * @throws RemoteException
 	 */	
@@ -97,11 +63,46 @@ public class ClientJoueurImpl extends UnicastRemoteObject implements ClientJoueu
 		this.piece = piece;
 		this.deplacementJoueur = deplacement;
 	}
+	
+	/**
+	 * Permet de récupérer la piece adverse à déplacer
+	 * 
+	 * @throws RemoteException
+	 */	
+	public Piece getPiece() {		
+		return piece;
+	}
+	
+	/**
+	 * Permet de récupérer le déplacement adverse
+	 */	
+	public String getDeplacement() {		
+		return deplacementJoueur;
+	}
+	
+	/**
+	 *  Vérification de la présence d'un adversaire pour interrompre son attente
+	 */
+	public boolean isAdversairePresent() {
+		return adversairePresent;
+	}
 
-
-	@Override
-	public void setEquipeAdverse(Equipe equipe_adverse) throws RemoteException {
-		this.equipeAdverse = equipe_adverse;
+	/**
+	 * Mise à jour du détail de la bataille par le serveur
+	 * 
+	 * @param resultatBataille
+	 * @throws RemoteException
+	 */
+	public void setResultatBataille(String resultatBataille) throws RemoteException{
+		this.resultatBataille = resultatBataille;
+	}
+	
+	/**
+	 * Récupération du détail de la bataille pour un affichage sur la console
+	 * 
+	 */
+	public String getResultatBataille() {
+		return resultatBataille;
 	}
 
 

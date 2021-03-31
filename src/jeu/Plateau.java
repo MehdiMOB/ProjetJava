@@ -51,17 +51,25 @@ public class Plateau implements Serializable {
 
 	}
 	
-	/*
-	 * Methode qui vérifie si la case de destination est vide, occupée apr un allié ou un adversaire
-	 * Dans ce dernier cas elle déclenche un combat
-	 */
+	
+	 /**
+	  * Methode qui vérifie si la case de destination est vide, occupée par un allié ou un adversaire
+	  * Dans ce dernier cas elle déclenche un combat
+	  * 
+	  * 
+	  * @param nomJoueur : permer de s'identifier auprès du serveur
+	  * @param occupant : pièce à positionner dans la case
+	  * @param x
+	  * @param y
+	  * @return Piece occupant la case
+	  */
 	
 	public Piece occuperCase(String nomJoueur, Piece occupant, int x , int y) {
-
+		// Cas de déplacement sipmle vers une case vide 		
 		if (lesCases[x][y].isVide()) {
 			
 			lesCases[x][y].setOccupant(occupant);
-			// Envoi du déplacement au joueur adverse
+			// Envoi du déplacement au joueur adverse uniquement si c'est son tour de jeu, sinon c'est un déplacement sur le plateau local
 			if (nomJoueur != "") {
 					try {
 						this.serveur.deplacerPiece(nomJoueur, occupant, x+1, y+1);						
@@ -74,31 +82,35 @@ public class Plateau implements Serializable {
 			return occupant;
 			
 		} else {
-			
+			// Cas où la case de destination est occupée
 			System.out.println("La case est déjà occupée par " + lesCases[x][y].getPiece().getType());
+			// Si la case est occupée par un adversaire il y a combat
 			if (occupant.getEquipe() != lesCases[x][y].getPiece().getEquipe()) {
 				System.out.println("FIGHT !!");			
-				
-				int resultatbataille = 0;
+				Arme arme = new Arme(10);
+				Armure armure = new Armure(5);
+				String resultatBataille = "";
+				// Récupération du détail de la bataille calculée par le serveur et affichage
 				try {
-					resultatbataille = serveur.bataille(occupant,lesCases[x][y].getPiece(), null, null);
+					resultatBataille = serveur.bataille(occupant, lesCases[x][y].getPiece(), arme, armure, x+1, y+1);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}				
+				System.out.println(resultatBataille.substring(0, resultatBataille.length() -1));
 				
-				int resultat = resultatbataille;
-				
-				if (resultat == 1 ) {
+				// Récupération du gagnant
+				String resultat = resultatBataille.substring(resultatBataille.length() -1);
+				// Suppression de la pièce perdante de son équipe et position de la pièce gagnante dans la case
+				if (resultat.equals("1")) {
 					lesCases[x][y].getPiece().getEquipe().supprimerPiece(lesCases[x][y].getPiece());
 					lesCases[x][y].setOccupant(occupant);
-				}
-				else {
+				} else {
 					occupant.getEquipe().supprimerPiece(occupant);
 					lesCases[x][y].setOccupant(lesCases[x][y].getPiece());
-				}
-				
+				}				
 			}
+			// Renvoi l'occupant de la case
 			return lesCases[x][y].getPiece();
 		}
 	}
@@ -113,9 +125,9 @@ public class Plateau implements Serializable {
 
 		for (int i = 0 ; i < 8 ; i ++) {
 			for (int y = 0 ; y < 8 ; y ++) {
-			if (lesCases[i][y].contenir(piece)) {
-				return i;
-			}
+				if (lesCases[i][y].contenir(piece)) {
+					return i;					
+				}
 			}
 		}
 		return 0;
@@ -125,9 +137,9 @@ public class Plateau implements Serializable {
 		
 		for (int x = 0 ; x<8 ; x++) {
 			for (int i= 0 ; i<8 ; i++ ) {
-			if (lesCases[x][i].contenir(piece)) {
-				return i;
-			}
+				if (lesCases[x][i].contenir(piece)) {
+					return i;
+				}
 			}
 		}
 		return 0;

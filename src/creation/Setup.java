@@ -40,6 +40,9 @@ public class Setup implements Serializable {
 		this.plateau= plateau; 
 	}
 	
+	/**
+	 * Positionnement des pièces sur le plateau
+	 */
 	
 	public void positionner() {
 		

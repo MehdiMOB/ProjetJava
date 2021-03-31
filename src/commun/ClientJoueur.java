@@ -24,38 +24,26 @@ public interface ClientJoueur extends Remote {
 	public void setEquipeAdverse(Equipe equipe_adverse) throws RemoteException;
 	
 	/**
-	 * Permet de réveiller le joueur lors de l'arrivée d'un adversaire ou d'une action de ce dernier
+	 * Mise à jour de la présence du joueur adverse par le serveur
 	 * 
+	 * @return booléen représentant la présence d'un adversaire
 	 * @throws RemoteException
 	 */
-	public void arriveeAdversaire() throws RemoteException;
-	
+	public void setAdversairePresent(boolean adversairePresent) throws RemoteException;
+		
 	/**
-	 * Permet de se mettre en attente d'une action de la part du joueur 
-	 * 
-	 * @throws RemoteException
-	 */		
-	public void attendreAdversaire() throws RemoteException;
-	
-	/**
-	 * Permet de récupérer la piece adverse à déplacer
-	 * 
-	 * @throws RemoteException
-	 */	
-	public Piece getPiece() throws RemoteException;
-	
-	/**
-	 * Permet de récupérer le déplacement adverse
-	 * 
-	 * @throws RemoteException
-	 */	
-	public String getDeplacement() throws RemoteException;
-	
-	/**
-	 * Permet de stoker le déplacement du joueur
+	 * Permet au serveur de communiquer la pièce à déplacer et la destination
 	 * 
 	 * @throws RemoteException
 	 */	
 	public void setDeplacement(Piece piece, String deplacement) throws RemoteException;	
+	
+	/**
+	 * Mise à jour du détail de la bataille par le serveur
+	 * 
+	 * @param resultatBataille
+	 * @throws RemoteException
+	 */
+	public void setResultatBataille(String resultatBataille) throws RemoteException;
 	
 }

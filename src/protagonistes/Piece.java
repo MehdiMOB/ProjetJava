@@ -52,7 +52,7 @@ public class Piece implements Serializable {
 		return equipe;
 	}
 	
-	public void subirAttaque(int degat) {
+	public String subirAttaque(int degat) {
 		
 		if(this.armure.getProtection() > degat ) {
 			this.armure.setProtection(this.armure.getProtection() - degat);
@@ -62,12 +62,13 @@ public class Piece implements Serializable {
 		if (vie < 0) {
 			vie = 0;
 		}
-		System.out.println(getType()+ " a subit une attaque !\n Vie restante : "+vie);
+		
+		return getType()+ " a subit une attaque !\n Vie restante : " + vie + "\n";
 		
 		
 	}
 	
-	public void renforceVie() {
+	public String renforceVie() {
 		if(type == 1) {
 			vie = Homme.getVIE();
 		}else if(type == 2) {
@@ -80,7 +81,7 @@ public class Piece implements Serializable {
 			vie = Heros.getVIE();
 		}
 			
-		System.out.println("le joueur " + getType() + " a gagné " + "et retrouve sa vie de " + vie + "\n");
+		return "le joueur " + getType() + " a gagné " + "et retrouve sa vie de " + vie + "\n";
 	}
 	
 	public void quitterEquipe() {
@@ -91,28 +92,22 @@ public class Piece implements Serializable {
 		return (vie <= 0);
 	}
 	
-	public void ajouterArmure(Armure armure) {
+	public String ajouterArmure(Armure armure) {
 		this.armure.setProtection(armure.getProtection());
-		System.out.println("le joueur " + getType() + " possède desormais une armure de " + this.armure.getProtection() + " de points de protection\n");
+		return "le joueur " + getType() + " possède desormais une armure de " + this.armure.getProtection() + " de points de protection \n";
 	}
 	
-	public void ajouteArme(Arme arme) {
-//		int degat = NombreAleatoire.nombreAleatoire();
-//		if(degat < 10) {
-//			this.arme.setDegat(degat+10);
-//		}else {
-//			this.arme.setDegat(degat);
-//		}
+	public String ajouteArme(Arme arme) {
+
 		this.arme.setDegat(arme.getDegat());
-		System.out.println("le joueur "+getType()+" possède desormais une arme, qui fera subir des degats de " + this.arme.getDegat() + " à ses prochains adversaires\n");
+		return "le joueur " + getType() + " possède desormais une arme, qui fera subir des degats de " + this.arme.getDegat() + " à ses prochains adversaires \n";
 	}
 
-	public void gagnerTresor(Arme arme,Armure armure) {
-		if(NombreAleatoire.nombreAleatoire() < 50)
-		{
-			ajouterArmure(armure);
+	public String gagnerTresor(Arme arme,Armure armure) {
+		if(NombreAleatoire.nombreAleatoire() < 50) {
+			return ajouterArmure(armure);
 		}else {
-			ajouteArme(arme);
+			return ajouteArme(arme);
 		}
 	}
 	
