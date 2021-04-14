@@ -75,7 +75,6 @@ public class DeplacerJoueur implements Serializable {
 		
 		// Déplacement de la pièce et récupération de la pièce qui occupe la case
 		Piece gagnant;
-		
 		if (local) {
 			gagnant = plateau.occuperCase("", piece, x-1, y-1);
 		}else {
@@ -89,5 +88,12 @@ public class DeplacerJoueur implements Serializable {
 		}else {
 			interfaceplateau.eliminer_Piece(piece, cord_x, cord_y);
 		}
+	}
+
+	public void eliminerPiece() {
+		int cord_x= plateau.getCoordonneeX(piece);
+		int cord_y= plateau.getCoordonneeY(piece);
+		interfaceplateau.eliminer_Piece(piece, cord_x + 1, cord_y + 1);
+		plateau.supprimerPiece(cord_x, cord_y);
 	}
 }

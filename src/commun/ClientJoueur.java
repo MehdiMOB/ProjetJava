@@ -7,8 +7,8 @@ import jeu.Equipe;
 import protagonistes.Piece;
 
 /**
- * interface de jeu de plateau type échecs multijoueurs
- * Fonctionalités coté utilisateur permettant la réception de messages de la part du serveur
+ * Interface de jeu de plateau type échecs multijoueurs
+ * Fonctionnalités coté utilisateur permettant la mise à jour d'informations par le serveur
  *  
  * @author ACHIBANE, GENET, KHERFELLAH, PONS
  *
@@ -17,8 +17,9 @@ import protagonistes.Piece;
 public interface ClientJoueur extends Remote {
 	
 	/**
-	 * Réception de la composition et de la position initiale de l'équipe adverse
+	 * Réception de la composition de l'équipe adverse
 	 * 
+	 * @param Equipe adverse
 	 * @throws RemoteException
 	 */
 	public void setEquipeAdverse(Equipe equipe_adverse) throws RemoteException;
@@ -26,14 +27,16 @@ public interface ClientJoueur extends Remote {
 	/**
 	 * Mise à jour de la présence du joueur adverse par le serveur
 	 * 
-	 * @return booléen représentant la présence d'un adversaire
+	 * @param booléen représentant la présence d'un adversaire
 	 * @throws RemoteException
 	 */
 	public void setAdversairePresent(boolean adversairePresent) throws RemoteException;
 		
 	/**
 	 * Permet au serveur de communiquer la pièce à déplacer et la destination
-	 * 
+	 *
+	 * @param Pièce à déplacer
+	 * @param Destination sous forme de chaine de caractères
 	 * @throws RemoteException
 	 */	
 	public void setDeplacement(Piece piece, String deplacement) throws RemoteException;	
@@ -44,6 +47,6 @@ public interface ClientJoueur extends Remote {
 	 * @param resultatBataille
 	 * @throws RemoteException
 	 */
-	public void setResultatBataille(String resultatBataille) throws RemoteException;
+	public void setResultatBataille(String resultatBataille, Piece gagnant, Piece perdant, String deplacement) throws RemoteException;
 	
 }

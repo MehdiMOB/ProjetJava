@@ -70,8 +70,10 @@ public class Plateau implements Serializable {
 			
 			lesCases[x][y].setOccupant(occupant);
 			// Envoi du déplacement au joueur adverse uniquement si c'est son tour de jeu, sinon c'est un déplacement sur le plateau local
+			System.out.println("nomJoueur = " + nomJoueur);
 			if (nomJoueur != "") {
 					try {
+						System.out.println("serveur");
 						this.serveur.deplacerPiece(nomJoueur, occupant, x+1, y+1);						
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
@@ -119,6 +121,12 @@ public class Plateau implements Serializable {
 		lesCases[x][y].libererOccupant();
 
 	}
+	
+	public void supprimerPiece(int x, int y) {
+		lesCases[x][y].getPiece().getEquipe().supprimerPiece(lesCases[x][y].getPiece());
+		lesCases[x][y].libererOccupant();
+	}
+	
 	
 
 	public int getCoordonneeX(Piece piece) {

@@ -6,13 +6,15 @@ import java.rmi.server.UnicastRemoteObject;
 import commun.Chat;
 
 
-/* la classe ChatImpl implémente l'interface de l'objet distant
-    Cette classe implémente les méthodes getName, getClient, setClient et sendMessage
-*/ 
+/** 
+ *  Implémentation de l'interface Chat
+ *
+ * @author ACHIBANE, GENET, KHERFELLAH, PONS
+ *
+ */
 public class ChatImpl extends UnicastRemoteObject implements Chat {
 
     public String name;
-    //public ChatInterface client = null;
  
     public ChatImpl(String n)  throws RemoteException { 
         this.name = n;
