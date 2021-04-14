@@ -62,21 +62,19 @@ public class Joueur {
 		// Connexion au serveur et Récupération de l'objet partagé par le serveur et instanciation
 		Echec serveur = (Echec) Naming.lookup("rmi://localhost:1099/Echec");
 		
-		CreerProtagoniste creation = new CreerProtagoniste();
+		CreerProtagoniste creation = new CreerProtagoniste(); 		// Interface de création des personnages (pièces)
 
-		Equipe equipeJoueur = null;
+		Equipe equipeJoueur = null;							// Composition des équipes
 		Equipe equipeAdversaire = null;
-		clientjoueur = new ClientJoueurImpl();
-
-		// Variables d'échange d'informations entre le serveur et le client
-		String camp = null;		
-		Plateau plateau;
-		InterfacePlateau interfaceplateau;
+		clientjoueur = new ClientJoueurImpl();				// Création de la classe de récupération des informations mises à jour par le serveur
+		
+		Plateau plateau;									// Ensemble des cases du plateau
+		InterfacePlateau interfaceplateau;					// Représentation du plateau pour un affichage sur la console
 		Setup setup;
 		
 		
     	// Récupération du camp
-		camp = serveur.demarrerPartie(getNomJoueur(), getClientjoueur(), "rmi://localhost:1100/" + getNomJoueur());
+		String camp = serveur.demarrerPartie(getNomJoueur(), getClientjoueur(), "rmi://localhost:1100/" + getNomJoueur());
 
 		// Lancement du script de création d'équipe et récupération de l'équipe créée
 		if (camp.equals("homme") || camp.equals("dragon")){
@@ -101,7 +99,6 @@ public class Joueur {
 
 		// Envoie de l'équipe créée au serveur quand l'adversaire est connecté		
 		String[] adversaire = serveur.creationEquipe(getNomJoueur(), equipeJoueur).split("%_%");
-//		String nomAdversaire = adversaire[1];
 		
 		// Mise en attente de réception de l'équipe adverse
 		equipeAdversaire = getClientjoueur().getEquipeAdverse();
@@ -127,7 +124,7 @@ public class Joueur {
 		}
 
 		setup.positionner();
-		setup.afficherSetup();
+		afficherGrille(setup);
 
 		try {
 			jouer(adversaire, setup, camp, serveur);
@@ -178,11 +175,7 @@ public class Joueur {
 					String[] deplacement = getClientjoueur().getDeplacement().split("%_%");
 					if (getClientjoueur().getResultatBataille() != "") {
 						// En cas de bataille, récupération des détails et suppression de la pièce éliminée
-						System.out.println(getClientjoueur().getResultatBataille().substring(0, getClientjoueur().getResultatBataille().length() -1));
-						Piece piecePerdante = getClientjoueur().getPerdant();
-						DeplacerJoueur eliminerPiece = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau, setup.plateau, piecePerdante);
-						eliminerPiece.eliminerPiece();
-						
+						afficherBataille(setup.interfacePlateau, setup.plateau);						
 					}else {
 						System.out.println("Récupération du coup adverse :");
 					}
@@ -208,10 +201,7 @@ public class Joueur {
 					String[] deplacement = getClientjoueur().getDeplacement().split("%_%");
 					if (getClientjoueur().getResultatBataille() != "") {
 						// En cas de bataille, récupération des détails et suppression de la pièce éliminée
-						System.out.println(getClientjoueur().getResultatBataille().substring(0, getClientjoueur().getResultatBataille().length() -1));
-						Piece piecePerdante = getClientjoueur().getPerdant();
-						DeplacerJoueur eliminerPiece = new DeplacerJoueur(getNomJoueur(), setup.interfacePlateau, setup.plateau, piecePerdante);
-						eliminerPiece.eliminerPiece();
+						afficherBataille(setup.interfacePlateau, setup.plateau);
 					}else {
 						System.out.println("Récupération du coup adverse :");
 					}
@@ -261,8 +251,8 @@ public class Joueur {
 			
 			choix = s.nextInt();
 			if (choix == 2) {
-				Scanner s2 = new Scanner(System.in);
-				msg = s2.nextLine().trim();
+				Scanner scan = new Scanner(System.in);
+				msg = scan.nextLine().trim();
 		    	msg = "["+ getNomJoueur() + "] " + msg;		    		
 		    	chatAdverse.sendMessage(msg);
 			}else {
@@ -290,14 +280,32 @@ public class Joueur {
 		setup.afficherSetup();
 	}
 	
+	/**
+	 * Gestion du déplacement 
+	 * 
+	 * @param Equipe dont une pièce va être déplacée
+	 * @param interface du plateau pour mettre à jour l'affichage
+	 * @param plateau contenant l'ensemble des cases
+	 */
 	private static void deplacement(Equipe equipe, InterfacePlateau interfacePlateau, Plateau plateau) {
 		System.out.println("Entrer le type de protagoniste dragon à contrôler :");
 		System.out.println(equipe.afficherPieces());
 		int num = Clavier.entrerClavierInt()-1;
 		System.out.println("Vous avez choisi le protagoniste "+ equipe.getPiece(num).getNom());
 		
-		DeplacerJoueur dragon_deplacement = new DeplacerJoueur(getNomJoueur(), interfacePlateau, plateau, equipe.getPiece(num));
-		dragon_deplacement.deplacement();
+		DeplacerJoueur deplacement = new DeplacerJoueur(getNomJoueur(), interfacePlateau, plateau, equipe.getPiece(num));
+		deplacement.deplacement();
+	}
+	
+	/**
+	 * Affichage des résultat de la bataille et mise à jour des pièces dans les équipes
+	 * 
+	 */
+	private static void afficherBataille(InterfacePlateau interfacePlateau, Plateau plateau) {
+		System.out.println(getClientjoueur().getResultatBataille().substring(0, getClientjoueur().getResultatBataille().length() -1));
+		Piece piecePerdante = getClientjoueur().getPerdant();
+		DeplacerJoueur eliminerPiece = new DeplacerJoueur(getNomJoueur(), interfacePlateau, plateau, piecePerdante);
+		eliminerPiece.eliminerPiece();
 	}
 }
 

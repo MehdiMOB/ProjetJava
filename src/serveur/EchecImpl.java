@@ -49,12 +49,14 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		
 		// Le premier joueur connecté a l'équipe dragon et se met en attente de l'adversaire
 		if (dragon == "") {
+			System.out.println("Connexion du joueur : " + nomJoueur);
 			dragon = nomJoueur;
 			joueurDragon = joueur;
-			chatDragon = chatJoueur;			
+			chatDragon = chatJoueur;
 			return "dragon";
 		}else {
 		// Le deuxième joueur connecté a l'équipe des hommes et informe le premier joueur de son arrivée	
+			System.out.println("Connexion du joueur : " + nomJoueur);
 			homme = nomJoueur;
 			joueurHomme = joueur;
 			chatHomme = chatJoueur;
@@ -67,7 +69,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 
 	
 	/**
-	 * Echange des équipe et du chat entre les joueurs
+	 * Echange des équipes et du chat entre les joueurs
 	 *  
 	 * @param nom du joueur qui communique son équipe, ensemble des pièces de l'équipe sous forme de chaine de caractères
 	 * @return 0 si tout s'est bien passé, 1 sinon
@@ -77,6 +79,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		
 		// Une fois que 2 joueurs sont connectés, la partie peut commencer et les tours vont alterner
 		if(joueurReady > 0) {
+			System.out.println("La partie peut commencer");
 			setTour("homme");
 		}
 		// Echange des équipes, des chats et du nom des joueurs
@@ -141,6 +144,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	 * @throws RemoteException
 	 */	
 	public String bataille(Piece A , Piece B, Arme arme, Armure armure, int x, int y) throws RemoteException {		
+		System.out.println("La bataille commence ...");
 		String histoire = "";					// Le déroulé de la bataille est enregistré sous forme 
 												// de chaine de caractères pour être ensuite communiquée aux joueurs
 
@@ -189,6 +193,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
+		System.out.println("La bataille est terminée");
 		return histoire;
 	}
 
@@ -229,15 +234,17 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	 * @throws RemoteException
 	 */
 	public void deconnexion(String nomJoueur) throws RemoteException{
+		
 		if (dragon.equals(nomJoueur)){
 			dragon = "";
 			joueurDragon = null;
-			chatDragon = "";			
+			chatDragon = "";
+			System.out.println(nomJoueur + " a quitté le serveur");
 		}else {
 			homme = "";
 			joueurHomme = null;
-			chatHomme = "";			
-		}
-		
+			chatHomme = "";	
+			System.out.println(nomJoueur + " a quitté le serveur");
+		}		
 	}
 }
