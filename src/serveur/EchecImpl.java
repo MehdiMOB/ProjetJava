@@ -72,7 +72,7 @@ public class EchecImpl extends UnicastRemoteObject implements Echec {
 	 * Echange des équipes et du chat entre les joueurs
 	 *  
 	 * @param nom du joueur qui communique son équipe, ensemble des pièces de l'équipe sous forme de chaine de caractères
-	 * @return 0 si tout s'est bien passé, 1 sinon
+	 * @return adresse du chat adverse et nom de l'adversaire
 	 * @throws RemoteException
 	 */	
 	public String creationEquipe(String nomJoueur, Equipe equipe) throws RemoteException {
