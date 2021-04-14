@@ -31,6 +31,7 @@ public class Joueur {
 
 	private static String nomJoueur;
 	private static ClientJoueurImpl clientjoueur; 
+	private static Echec serveur;
 	
 	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException, InterruptedException{
 
@@ -51,7 +52,10 @@ public class Joueur {
     	
 		// Communication du chat
     	Chat server = new ChatImpl(getNomJoueur());
-    	Naming.rebind("rmi://localhost:1100/" + getNomJoueur(), server); 
+    	Naming.rebind("rmi://localhost:1100/" + getNomJoueur(), server);
+    	
+    	// Connexion au serveur et Récupération de l'objet partagé par le serveur et instanciation
+    	serveur = (Echec) Naming.lookup("rmi://localhost:1099/Echec");
     	
     	jouerPartie();
 
@@ -59,8 +63,7 @@ public class Joueur {
 	
 	public static void jouerPartie() throws RemoteException, MalformedURLException, NotBoundException {
 		
-		// Connexion au serveur et Récupération de l'objet partagé par le serveur et instanciation
-		Echec serveur = (Echec) Naming.lookup("rmi://localhost:1099/Echec");
+		
 		
 		CreerProtagoniste creation = new CreerProtagoniste(); 		// Interface de création des personnages (pièces)
 
@@ -83,7 +86,7 @@ public class Joueur {
 			System.err.println("Valeur de retour inattendue !");
 		}
 
-		// Si premier, mise en attente de la connexion de l'adversaire
+		// Si premier connecté, mise en attente de la connexion de l'adversaire
 		Boolean adversairePresent = getClientjoueur().isAdversairePresent();
 		while(!adversairePresent) {
 			System.out.print("En recherche de joueurs ...");
@@ -168,7 +171,7 @@ public class Joueur {
 					afficherGrille(setup);
 					monTour = false;
 				} else {				
-					// attente du tour et récupération du tour adverse
+					// Attente du tour et récupération du tour adverse
 					attendreSonTour(adversaire, serveur);
 					// Récupération du coup adverse
 					Piece pieceAdverse = getClientjoueur().getPiece();
@@ -213,7 +216,6 @@ public class Joueur {
 				}
 			}
 		}
-		serveur.deconnexion(nomJoueur);
 		System.out.println("Choisir une option: ");
 		System.out.println("1- Commencer une nouvelle partie");
 		System.out.println("2- Quitter \n");
@@ -222,6 +224,7 @@ public class Joueur {
 		if (option == 1){
 			jouerPartie();
 		} else {
+			serveur.deconnexion(nomJoueur);
 			System.out.println("Merci d'avoir joué avec nous :) ");
 		}
 	}
@@ -251,6 +254,7 @@ public class Joueur {
 			
 			choix = s.nextInt();
 			if (choix == 2) {
+				System.out.println("> ");
 				Scanner scan = new Scanner(System.in);
 				msg = scan.nextLine().trim();
 		    	msg = "["+ getNomJoueur() + "] " + msg;		    		
@@ -284,11 +288,11 @@ public class Joueur {
 	 * Gestion du déplacement 
 	 * 
 	 * @param Equipe dont une pièce va être déplacée
-	 * @param interface du plateau pour mettre à jour l'affichage
-	 * @param plateau contenant l'ensemble des cases
+	 * @param Interface du plateau pour mettre à jour l'affichage
+	 * @param Plateau contenant l'ensemble des cases
 	 */
 	private static void deplacement(Equipe equipe, InterfacePlateau interfacePlateau, Plateau plateau) {
-		System.out.println("Entrer le type de protagoniste dragon à contrôler :");
+		System.out.println("Entrer le type de protagoniste à contrôler :");
 		System.out.println(equipe.afficherPieces());
 		int num = Clavier.entrerClavierInt()-1;
 		System.out.println("Vous avez choisi le protagoniste "+ equipe.getPiece(num).getNom());
@@ -298,7 +302,7 @@ public class Joueur {
 	}
 	
 	/**
-	 * Affichage des résultat de la bataille et mise à jour des pièces dans les équipes
+	 * Affichage des résultats de la bataille et mise à jour des pièces dans les équipes
 	 * 
 	 */
 	private static void afficherBataille(InterfacePlateau interfacePlateau, Plateau plateau) {

@@ -25,7 +25,7 @@ public class Equipe implements Serializable {
 	
 	public Equipe(String nom) {
 		this.nom = nom;
-		// L' effectif est initialisé à 0 au départ
+		// L'effectif est initialisé à 0 au départ
 		this.nbEffectif= 0;
 	}
 
@@ -43,7 +43,7 @@ public class Equipe implements Serializable {
 	
 	/**
 	 *  Retourne la pièce à la position demandée ou la première cette position n'existe pas
-	 * @param i
+	 * @param numéro de la pièce
 	 * @return
 	 */	
 	public Piece getPiece (int i) {

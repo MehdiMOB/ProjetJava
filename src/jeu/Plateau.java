@@ -70,10 +70,8 @@ public class Plateau implements Serializable {
 			
 			lesCases[x][y].setOccupant(occupant);
 			// Envoi du déplacement au joueur adverse uniquement si c'est son tour de jeu, sinon c'est un déplacement sur le plateau local
-			System.out.println("nomJoueur = " + nomJoueur);
 			if (nomJoueur != "") {
 					try {
-						System.out.println("serveur");
 						this.serveur.deplacerPiece(nomJoueur, occupant, x+1, y+1);						
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
